@@ -1,0 +1,36 @@
+name: media_tool
+description: Video, image and audio processing via native platform code.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ">=2.18.0 <3.0.0"
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        default_package: media_tool_android
+      ios:
+        default_package: media_tool_ios
+      macos:
+        default_package: media_tool_macos
+
+dependencies:
+  flutter:
+    sdk: flutter
+  media_tool_android:
+    path: ../media_tool_android
+  media_tool_ios:
+    path: ../media_tool_ios
+  media_tool_macos:
+    path: ../media_tool_macos
+  media_tool_platform_interface:
+    path: ../media_tool_platform_interface
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^0.3.0
+  plugin_platform_interface: ^2.0.0
+  very_good_analysis: ^3.1.0

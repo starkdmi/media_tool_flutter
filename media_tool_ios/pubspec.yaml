@@ -1,0 +1,27 @@
+name: media_tool_ios
+description: iOS implementation of the media_tool plugin
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ">=2.18.0 <3.0.0"
+
+flutter:
+  plugin:
+    implements: media_tool
+    platforms:
+      ios:
+        pluginClass: MediaToolPlugin
+        dartPluginClass: MediaToolIOS
+
+dependencies:
+  flutter:
+    sdk: flutter
+  media_tool_platform_interface:
+    path: ../media_tool_platform_interface
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.0
+  very_good_analysis: ^3.1.0
