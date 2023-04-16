@@ -3,13 +3,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "Demo",
+    name: "Tests",
     platforms: [
-       .macOS(.v12)
+        .macOS(.v12), .iOS(.v15)
     ],
     targets: [
         .executableTarget(
-            name: "Demo",
+            name: "Tests",
             path: "Sources"
         ),
     ]
