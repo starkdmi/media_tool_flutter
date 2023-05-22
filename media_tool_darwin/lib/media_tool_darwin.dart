@@ -2,15 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
 
-/// The iOS implementation of [MediaToolPlatform].
-class MediaToolIOS extends MediaToolPlatform {
+/// The Darwin implementation of [MediaToolPlatform].
+class MediaToolDarwin extends MediaToolPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('media_tool_ios');
+  final methodChannel = const MethodChannel('media_tool');
 
   /// Registers this class as the default instance of [MediaToolPlatform]
   static void registerWith() {
-    MediaToolPlatform.instance = MediaToolIOS();
+    MediaToolPlatform.instance = MediaToolDarwin();
   }
 
   @override

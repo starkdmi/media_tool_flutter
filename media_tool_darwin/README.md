@@ -1,8 +1,8 @@
-# media_tool_ios
+# media_tool_darwin
 
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 
-The ios implementation of `media_tool`.
+The Darwin implementation of `media_tool`.
 
 ## Usage
 

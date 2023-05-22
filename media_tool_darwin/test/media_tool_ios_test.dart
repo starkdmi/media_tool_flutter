@@ -1,18 +1,18 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:media_tool_ios/media_tool_ios.dart';
+import 'package:media_tool_darwin/media_tool_darwin.dart';
 import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('MediaToolIOS', () {
+  group('MediaToolDarwin', () {
     const kPlatformName = 'iOS';
-    late MediaToolIOS mediaTool;
+    late MediaToolDarwin mediaTool;
     late List<MethodCall> log;
 
     setUp(() async {
-      mediaTool = MediaToolIOS();
+      mediaTool = MediaToolDarwin();
 
       log = <MethodCall>[];
       TestDefaultBinaryMessengerBinding.instance!.defaultBinaryMessenger
@@ -28,8 +28,8 @@ void main() {
     });
 
     test('can be registered', () {
-      MediaToolIOS.registerWith();
-      expect(MediaToolPlatform.instance, isA<MediaToolIOS>());
+      MediaToolDarwin.registerWith();
+      expect(MediaToolPlatform.instance, isA<MediaToolDarwin>());
     });
 
     test('getPlatformName returns correct name', () async {

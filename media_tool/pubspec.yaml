@@ -12,19 +12,17 @@ flutter:
       android:
         default_package: media_tool_android
       ios:
-        default_package: media_tool_ios
+        default_package: media_tool_darwin
       macos:
-        default_package: media_tool_macos
+        default_package: media_tool_darwin
 
 dependencies:
   flutter:
     sdk: flutter
   media_tool_android:
     path: ../media_tool_android
-  media_tool_ios:
-    path: ../media_tool_ios
-  media_tool_macos:
-    path: ../media_tool_macos
+  media_tool_darwin:
+    path: ../media_tool_darwin
   media_tool_platform_interface:
     path: ../media_tool_platform_interface
 
