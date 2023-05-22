@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-
 import 'package:media_tool_example/main.dart' as app;
 
 void main() {
@@ -21,9 +19,10 @@ void main() {
 }
 
 String expectedPlatformName() {
-  if (Platform.isAndroid) return 'Android';
-  if (Platform.isIOS) return 'iOS';
-  if (Platform.isMacOS) return 'MacOS';
+  if (Platform.isIOS) {
+    return 'iOS';
+  } else if (Platform.isMacOS) {
+    return 'MacOS';
+  }
   throw UnsupportedError('Unsupported platform ${Platform.operatingSystem}');
 }
-
