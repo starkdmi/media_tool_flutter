@@ -1,4 +1,4 @@
-name: media_tool_macos
+name: media_tool_darwin
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -7,14 +7,14 @@ concurrency:
 on:
   pull_request:
     paths:
-      - ".github/workflows/media_tool_macos.yaml"
-      - "media_tool_macos/**"
+      - ".github/workflows/media_tool_darwin.yaml"
+      - "media_tool_darwin/**"
   push:
     branches:
       - main
     paths:
-      - ".github/workflows/media_tool_macos.yaml"
-      - "media_tool_macos/**"
+      - ".github/workflows/media_tool_darwin.yaml"
+      - "media_tool_darwin/**"
 
 jobs:
   build:
@@ -22,5 +22,5 @@ jobs:
     with:
       flutter_channel: stable
       flutter_version: 3.3.10
-      working_directory: media_tool_macos
+      working_directory: media_tool_darwin
 
