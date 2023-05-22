@@ -9,8 +9,6 @@ environment:
 flutter:
   plugin:
     platforms:
-      android:
-        default_package: media_tool_android
       ios:
         default_package: media_tool_darwin
       macos:
@@ -19,8 +17,6 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  media_tool_android:
-    path: ../media_tool_android
   media_tool_darwin:
     path: ../media_tool_darwin
   media_tool_platform_interface:
