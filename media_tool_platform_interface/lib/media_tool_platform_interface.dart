@@ -4,6 +4,9 @@ import 'package:media_tool_platform_interface/src/video_compress_event.dart';
 import 'package:media_tool_platform_interface/src/video_compress_options.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+export 'package:media_tool_platform_interface/src/video_compress_event.dart';
+export 'package:media_tool_platform_interface/src/video_compress_options.dart';
+
 /// The interface that implementations of media_tool must implement
 ///
 /// Platform implementations should extend this class
