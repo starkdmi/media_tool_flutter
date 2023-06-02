@@ -3,30 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
 
-/// Darwin implementation of [VideoCompressOptions]
-class VideoCompressOptionsDarwin extends VideoCompressOptions {
-  /// Public initializer
-  const VideoCompressOptionsDarwin({ 
-    required super.id,
-    required super.path, 
-    required super.destination, 
-    required this.x,
-  }) : super();
-
-  /// Some property
-  final int x;
-
-  /// Generate Map object to pass over the MethodChannel
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'path': path,
-      'destination': destination,
-      'x' : x 
-    };
-  }
-}
-
 /// The Darwin implementation of [MediaToolPlatform].
 class MediaToolDarwin extends MediaToolPlatform {
   /// The method channel used to interact with the native platform.
@@ -58,21 +34,16 @@ class MediaToolDarwin extends MediaToolPlatform {
         if (event is bool) {
           if (event) {
             // started
-            yield VideoCompressStartedEvent();
+            yield const VideoCompressStartedEvent();
           } else {
             // cancelled
-            yield VideoCompressCancelledEvent();
+            yield const VideoCompressCancelledEvent();
           }
         } else if (event is double) {
           // progress
           yield VideoCompressProgressEvent(progress: event);
         } else if (event is String) {
-          yield VideoCompressFailedEvent(error: event);
-        }
-        else if (event is Map) {
-          // completed
-          final url = event['url'] as String;
-          VideoCompressCompletedEvent(url: url);
+          yield VideoCompressCompletedEvent(url: event);
         } else {
           throw UnimplementedError("VideoCompressEvent for this data type isn't implemented");
         }

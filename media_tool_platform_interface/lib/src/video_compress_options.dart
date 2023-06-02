@@ -1,5 +1,5 @@
-/// Base class for video compression process settings
-abstract class VideoCompressOptions {
+/// Base class for video compression settings
+class VideoCompressOptions {
   /// Public initializer
   const VideoCompressOptions({ required this.id, required this.path, required this.destination });
 
@@ -13,5 +13,11 @@ abstract class VideoCompressOptions {
   final String destination;
 
   /// Convert class into Map object to pass over the MethodChannel
-  Map<String, dynamic> toMap();
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'path': path,
+      'destination': destination,
+    };
+  }
 }

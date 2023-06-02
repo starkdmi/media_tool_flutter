@@ -6,11 +6,6 @@ import Flutter
 import FlutterMacOS
 #endif
 
-/*public struct PluginOperation {
-    let task: CompressionTask
-    let stream: FlutterStreamHandler
-}*/
-
 public class MediaToolPlugin: NSObject, FlutterPlugin {
     static var messenger: FlutterBinaryMessenger?
 
@@ -64,6 +59,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             // Event channel had set up
             result(nil)
 
+            // Asynchronous code
             Task {
                 // Start the compression
                 let task = await VideoTool.convert(
