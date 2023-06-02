@@ -76,7 +76,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                         case .progress(let progress):
                             stream.sink(progress.fractionCompleted)
                         case .completed(let url):
-                            stream.sink(url.absoluteString)
+                            stream.sink(url.path)
                             stream.sink(FlutterEndOfEventStream)
                         case .failed(let error):
                             let flutterError = FlutterError(

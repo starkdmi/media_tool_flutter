@@ -35,7 +35,7 @@ void main() {
           print(event);
         }*/
         expect(task.events, emitsThrough(
-          const VideoCompressCompletedEvent(url: 'file:///Users/starkdmi/Downloads/oludeniz.compressed.mov'),
+          VideoCompressCompletedEvent(url: options.destination),
         ),);
       });
     });
