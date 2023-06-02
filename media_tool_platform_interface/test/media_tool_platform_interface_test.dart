@@ -6,6 +6,16 @@ class MediaToolMock extends MediaToolPlatform {
 
   @override
   Future<String?> getPlatformName() async => mockPlatformName;
+  
+  @override
+  Stream<VideoCompressEvent> startVideoCompression(VideoCompressOptions options) async* {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> cancelVideoCompression(String id) {
+    throw UnimplementedError();
+  }
 }
 
 void main() {

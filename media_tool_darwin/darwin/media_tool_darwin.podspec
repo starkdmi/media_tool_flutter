@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   A Darwin implementation of the media_tool plugin.
                        DESC
   s.homepage         = 'https://github.com/starkdmi/media_tool_flutter'
-  s.license          = { :type => 'BSD', :file => '../LICENSE' }
+  s.license          = { :type => 'GPLv3', :file => '../LICENSE' }
   s.author           = { 'Dmitry Starkov' => 'starkdev@icloud.com' }
   s.source           = { :path => '.' }  
   s.source_files = 'Classes/**/*'

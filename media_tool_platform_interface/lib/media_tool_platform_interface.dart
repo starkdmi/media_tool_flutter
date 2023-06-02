@@ -38,8 +38,8 @@ abstract class MediaToolPlatform extends PlatformInterface {
   Future<String?> getPlatformName();
 
   /// Compress video file
-  Future<Stream<VideoCompressEvent>> startVideoCompression(VideoCompressOptions options);
+  Stream<VideoCompressEvent> startVideoCompression(VideoCompressOptions options);
 
   /// Cancel current video compression process
-  Future<void> cancelVideoCompression();
+  Future<bool> cancelVideoCompression(String id);
 }

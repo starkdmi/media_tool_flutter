@@ -12,11 +12,11 @@ flutter:
     platforms:
       ios:
         pluginClass: MediaToolPlugin
-        #dartPluginClass: MediaTool
+        dartPluginClass: MediaToolDarwin
         sharedDarwinSource: true
       macos:
         pluginClass: MediaToolPlugin
-        #dartPluginClass: MediaTool
+        dartPluginClass: MediaToolDarwin
         sharedDarwinSource: true
 
 dependencies:
