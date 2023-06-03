@@ -72,11 +72,11 @@ class CompressVideoSettings {
 
   /// Serialize to json
   Map<String, dynamic> toMap() => {
-    'codec': codec?.id,
-    'bitrate': bitrate,
-    'quality': quality,
-    'width': size?.width,
-    'height': size?.height,
+    'codec': codec?.id ?? 'hvc1',
+    'bitrate': bitrate ?? -1,
+    'quality': quality ?? -1.0,
+    'width': size?.width ?? -1,
+    'height': size?.height ?? -1,
   };
 }
 
@@ -129,9 +129,9 @@ class CompressAudioSettings {
 
   /// Serialize to json
   Map<String, dynamic> toMap() => {
-    'codec': codec?.id,
-    'bitrate': bitrate,
-    'sampleRate': sampleRate,
+    'codec': codec?.id ?? 0,
+    'bitrate': bitrate ?? -1,
+    'sampleRate': sampleRate ?? -1,
   };
 }
 

@@ -77,24 +77,24 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         
         let sourceUrl = URL(fileURLWithPath: path)
         let destinationUrl = URL(fileURLWithPath: destination)
-
+        
         guard
             let videoOptions = arguments["video"] as? [String: Any],
-            let codec = videoOptions["codec"] as? String?,
-            let bitrate = videoOptions["bitrate"] as? Int?,
-            let quality = videoOptions["quality"] as? Double?,
-            let width = videoOptions["width"] as? Int?,
-            let height = videoOptions["height"] as? Int?
+            let codec = videoOptions["codec"] as? String,
+            let bitrate = videoOptions["bitrate"] as? Int,
+            let quality = videoOptions["quality"] as? Double,
+            let width = videoOptions["width"] as? Double,
+            let height = videoOptions["height"] as? Double
         else {
-            result(FlutterError("Invalid video settings"))
+            result(FlutterError("Invalid video settings \(arguments["video"])"))
             return
         }
         
         let videoSettings = CompressionVideoSettings(
-            codec: codec != nil ? AVVideoCodecType(rawValue: codec!) : nil,
-            bitrate: bitrate != nil ? .value(bitrate!) : .auto,
-            quality: quality,
-            size: width != nil && height != nil ? CGSize(width: width!, height: height!) : nil
+            codec: AVVideoCodecType(rawValue: codec),
+            bitrate: bitrate != -1 ? .value(bitrate) : .auto,
+            quality: quality != -1.0 ? quality : nil,
+            size: width != -1 && height != -1 ? CGSize(width: width, height: height) : nil
         )
         
         let skipAudio: Bool
@@ -102,9 +102,9 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         let audioOptions = arguments["audio"] as? [String: Any]
         if let audioOptions = audioOptions {
             guard
-                let codec = audioOptions["codec"] as? Int?,
-                let bitrate = audioOptions["bitrate"] as? Int?,
-                let sampleRate = audioOptions["sampleRate"] as? Int?
+                let codec = audioOptions["codec"] as? Int,
+                let bitrate = audioOptions["bitrate"] as? Int,
+                let sampleRate = audioOptions["sampleRate"] as? Int
             else {
                 result(FlutterError("Invalid audio settings"))
                 return
@@ -122,9 +122,9 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             
             audioSettings = CompressionAudioSettings(
                 codec: audioCodec,
-                // codec: codec != nil ? CompressionAudioCodec(rawValue: codec!) : .default,
-                bitrate: bitrate != nil ? .value(bitrate!) : .auto,
-                sampleRate: sampleRate
+                // codec: CompressionAudioCodec(rawValue: codec),
+                bitrate: bitrate != -1 ? .value(bitrate) : .auto,
+                sampleRate: sampleRate != -1 ? sampleRate : nil
             )
         } else {
             skipAudio = true
