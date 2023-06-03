@@ -44,9 +44,9 @@ class MediaToolDarwin extends MediaToolPlatform {
           yield VideoCompressProgressEvent(progress: event);
         } else if (event is String) {
           yield VideoCompressCompletedEvent(url: event);
-        } else {
+        } /*else {
           throw UnimplementedError("VideoCompressEvent for this data type isn't implemented");
-        }
+        }*/
       }
     } catch (error) {
       // failed
