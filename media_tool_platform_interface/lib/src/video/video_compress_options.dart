@@ -54,7 +54,7 @@ class CompressVideoSettings {
   const CompressVideoSettings({ 
     this.codec,
     this.bitrate,
-    this.quality = 1.0,
+    this.quality,
     this.size,
   });
 
@@ -65,14 +65,14 @@ class CompressVideoSettings {
   final int? bitrate;
 
   /// Video quality, in range `[0.0, 1.0]`, ignored when `bitrate` is set
-  final double quality;
+  final double? quality;
 
   /// Video resolution to fit in
   final Size? size;
 
   /// Serialize to json
   Map<String, dynamic> toMap() => {
-    'codec': codec?.value,
+    'codec': codec?.id,
     'bitrate': bitrate,
     'quality': quality,
     'width': size?.width,
@@ -88,21 +88,23 @@ enum CompressVideoCodec {
   /// H.265/HEVC
   hevc,
 
-  /// ProRes
+  /// ProRes 4444
   prores
+
+  // muxa, jpeg, apcn, apch, apcs, apco
 }
 
 /// Video codec extension
 extension CompressVideoCodecValue on CompressVideoCodec {
-  /// Integer value for codec
-  int get value {
+  /// Codec identifier
+  String get id {
     switch (this) {
     case CompressVideoCodec.h264:
-      return 0;
+      return 'avc1';
     case CompressVideoCodec.hevc:
-      return 1;
+      return 'hvc1';
     case CompressVideoCodec.prores:
-      return 2;
+      return 'ap4h';
     }
   }
 }
@@ -127,7 +129,7 @@ class CompressAudioSettings {
 
   /// Serialize to json
   Map<String, dynamic> toMap() => {
-    'codec': codec?.value,
+    'codec': codec?.id,
     'bitrate': bitrate,
     'sampleRate': sampleRate,
   };
@@ -147,15 +149,15 @@ enum CompressAudioCodec {
 
 /// Audio codec extension
 extension CompressAudioCodecValue on CompressAudioCodec {
-  /// Integer value for codec
-  int get value {
+  /// Audio codec id
+  int get id {
     switch (this) {
     case CompressAudioCodec.aac:
-      return 0;
-    case CompressAudioCodec.opus:
       return 1;
-    case CompressAudioCodec.flac:
+    case CompressAudioCodec.opus:
       return 2;
+    case CompressAudioCodec.flac:
+      return 3;
     }
   }
 }
