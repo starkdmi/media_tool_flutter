@@ -20,8 +20,26 @@ class VideoCompressionTask {
 /// Video manipulation
 class VideoTool {
   /// Compress video file
-  static VideoCompressionTask compress(VideoCompressOptions options) {
-    final stream = _platform.startVideoCompression(options);
-    return VideoCompressionTask(id: options.id, events: stream);
+  static VideoCompressionTask compress({
+    required String id,
+    required String path,
+    required String destination,
+    VideoSettings videoSettings = const VideoSettings(),
+    bool skipAudio = false,
+    AudioSettings audioSettings = const AudioSettings(),
+    bool overwrite = false,
+    bool deleteOrigin = false,
+  }) {
+    final stream = _platform.startVideoCompression(
+      id: id,
+      path: path,
+      destination: destination,
+      videoSettings: videoSettings,
+      skipAudio: skipAudio,
+      audioSettings: audioSettings,
+      overwrite: overwrite,
+      deleteOrigin: deleteOrigin,
+    );
+    return VideoCompressionTask(id: id, events: stream);
   }
 }

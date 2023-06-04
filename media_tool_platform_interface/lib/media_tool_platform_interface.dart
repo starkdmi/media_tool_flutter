@@ -1,11 +1,9 @@
 // ignore_for_file: lines_longer_than_80_chars
 import 'package:media_tool_platform_interface/src/method_channel_media_tool.dart';
-import 'package:media_tool_platform_interface/src/video/video_compress_event.dart';
-import 'package:media_tool_platform_interface/src/video/video_compress_options.dart';
+import 'package:media_tool_platform_interface/src/video/video.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-export 'package:media_tool_platform_interface/src/video/video_compress_event.dart';
-export 'package:media_tool_platform_interface/src/video/video_compress_options.dart';
+export 'package:media_tool_platform_interface/src/video/video.dart';
 
 /// The interface that implementations of media_tool must implement
 ///
@@ -38,7 +36,24 @@ abstract class MediaToolPlatform extends PlatformInterface {
   Future<String?> getPlatformName();
 
   /// Compress video file
-  Stream<VideoCompressEvent> startVideoCompression(VideoCompressOptions options);
+  /// [id] - Unique process ID
+  /// [path] - Path location of input video file
+  /// [destination] - Path location of output video file
+  /// [videoSettings] - Video settings: codec, bitrate, quality, resolution
+  /// [skipAudio] - If `true` then audio is skipped
+  /// [audioSettings] - Audio settings: codec, bitrate, sampleRate
+  /// [overwrite] - Should overwrite exisiting file at destination
+  /// [deleteOrigin] - Should input video file be deleted on succeed compression
+  Stream<VideoCompressEvent> startVideoCompression({
+    required String id,
+    required String path,
+    required String destination,
+    VideoSettings videoSettings = const VideoSettings(),
+    bool skipAudio = false,
+    AudioSettings audioSettings = const AudioSettings(),
+    bool overwrite = false,
+    bool deleteOrigin = false,
+  });
 
   /// Cancel current video compression process
   Future<bool> cancelVideoCompression(String id);

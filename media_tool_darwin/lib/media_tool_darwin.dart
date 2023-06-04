@@ -21,12 +21,30 @@ class MediaToolDarwin extends MediaToolPlatform {
   }
 
   @override
-  Stream<VideoCompressEvent> startVideoCompression(VideoCompressOptions options) async* {
+  Stream<VideoCompressEvent> startVideoCompression({
+    required String id,
+    required String path,
+    required String destination,
+    VideoSettings videoSettings = const VideoSettings(),
+    bool skipAudio = false,
+    AudioSettings audioSettings = const AudioSettings(),
+    bool overwrite = false,
+    bool deleteOrigin = false,
+  }) async* {
     try {
       // Initialize the compression process
-      await methodChannel.invokeMethod<bool>('startVideoCompression', options.toMap()); // nil
+      await methodChannel.invokeMethod<bool>('startVideoCompression', {
+        'id': id,
+        'path': path,
+        'destination': destination,
+        'video': videoSettings.toMap(),
+        'skipAudio': skipAudio,
+        'audio': skipAudio ? null : audioSettings.toMap(),
+        'overwrite': overwrite,
+        'deleteOrigin': deleteOrigin,
+      }); // nil
 
-      final stream = EventChannel('media_tool.video_compression.${options.id}')
+      final stream = EventChannel('media_tool.video_compression.$id')
         .receiveBroadcastStream();
 
       // Map events from native platform into Dart based events
