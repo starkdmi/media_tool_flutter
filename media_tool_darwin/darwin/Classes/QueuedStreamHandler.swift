@@ -8,6 +8,8 @@ import FlutterMacOS
 public class QueuedStreamHandler: NSObject, FlutterStreamHandler {
     var eventChannel: FlutterEventChannel?
     private var eventSink: FlutterEventSink?
+
+    private let accessQueue = DispatchQueue(label: "com.starkdev.media.tool.sync.queue")
     private var queue = [Any]()
 
     public init(name: String, messenger: FlutterBinaryMessenger) {
@@ -28,16 +30,21 @@ public class QueuedStreamHandler: NSObject, FlutterStreamHandler {
     }
 
     public func sink(_ data: Any) {
-        queue.append(data)
+        accessQueue.sync {
+            queue.append(data)
+        }
         releaseQueue()
     }
 
     private func releaseQueue() {
         guard let eventSink = eventSink else { return }
 
-        DispatchQueue.main.async {
+        accessQueue.sync {
             while !self.queue.isEmpty {
-                eventSink(self.queue.removeFirst())
+                let item = self.queue.removeFirst()
+                DispatchQueue.main.async {
+                    eventSink(item)
+                }
             }
         }
     }

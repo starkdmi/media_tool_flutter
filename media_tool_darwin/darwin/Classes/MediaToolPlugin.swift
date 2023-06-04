@@ -139,38 +139,43 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         result(nil)
 
         // Asynchronous code
-        Task {
-            // Start the compression
-            let task = await VideoTool.convert(
-                source: sourceUrl,
-                destination: destinationUrl,
-                fileType: fileType,
-                videoSettings: videoSettings,
-                skipAudio: skipAudio,
-                audioSettings: audioSettings,
-                overwrite: overwrite,
-                deleteSourceFile: deleteOrigin,
-                callback: { state in
-                    switch state {
-                    case .started:
-                        stream.sink(true)
-                    case .progress(let progress):
-                        stream.sink(progress.fractionCompleted)
-                    case .completed(let url):
-                        stream.sink(url.path)
-                        stream.sink(FlutterEndOfEventStream)
-                    case .failed(let error):
-                        stream.sink(FlutterError(error.localizedDescription))
-                        stream.sink(FlutterEndOfEventStream)
-                    case .cancelled:
-                        stream.sink(false)
-                        stream.sink(FlutterEndOfEventStream)
+        Task.detached {
+            do {
+                // Start the compression
+                let task = await VideoTool.convert(
+                    source: sourceUrl,
+                    destination: destinationUrl,
+                    fileType: fileType,
+                    videoSettings: videoSettings,
+                    skipAudio: skipAudio,
+                    audioSettings: audioSettings,
+                    overwrite: overwrite,
+                    deleteSourceFile: deleteOrigin,
+                    callback: { state in
+                        switch state {
+                        case .started:
+                            stream.sink(true)
+                        case .progress(let progress):
+                            stream.sink(progress.fractionCompleted)
+                        case .completed(let url):
+                            stream.sink(url.path)
+                            stream.sink(FlutterEndOfEventStream)
+                        case .failed(let error):
+                            stream.sink(FlutterError(error.localizedDescription))
+                            stream.sink(FlutterEndOfEventStream)
+                        case .cancelled:
+                            stream.sink(false)
+                            stream.sink(FlutterEndOfEventStream)
+                        }
                     }
-                }
-            )
+                )
 
-            // Store the task
-            operations[uid] = (task: task, stream: stream)
+                // Store the task
+                self.operations[uid] = (task: task, stream: stream)
+            } catch let error as NSError {
+                stream.sink(FlutterError(error.localizedDescription))
+                stream.sink(FlutterEndOfEventStream)
+            }
         }
     }
 
