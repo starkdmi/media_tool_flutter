@@ -108,18 +108,8 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                     return
                   }
 
-            // TODO: After updating MediaToolSwift to 1.0.2 CompressionAudioCodec(rawValue:) can be used
-            let audioCodec: CompressionAudioCodec
-            switch codec {
-            case 1: audioCodec = .aac
-            case 2: audioCodec = .opus
-            case 3: audioCodec = .flac
-            default: audioCodec = .default
-            }
-
             audioSettings = CompressionAudioSettings(
-                codec: audioCodec,
-                // codec: CompressionAudioCodec(rawValue: codec),
+                codec: CompressionAudioCodec(rawValue: codec) ?? .default,
                 bitrate: bitrate != -1 ? .value(bitrate) : .auto,
                 sampleRate: sampleRate != -1 ? sampleRate : nil
             )
