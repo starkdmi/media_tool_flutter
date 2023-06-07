@@ -7,7 +7,6 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('MediaToolDarwin', () {
-    const kPlatformName = 'iOS';
     late MediaToolDarwin mediaTool;
     late List<MethodCall> log;
 
@@ -19,8 +18,10 @@ void main() {
           .setMockMethodCallHandler(mediaTool.methodChannel, (methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
-          case 'getPlatformName':
-            return kPlatformName;
+          case 'startVideoCompression':
+            return null;
+          case 'cancelVideoCompression':
+            return null;
           default:
             return null;
         }
@@ -32,13 +33,13 @@ void main() {
       expect(MediaToolPlatform.instance, isA<MediaToolDarwin>());
     });
 
-    test('getPlatformName returns correct name', () async {
+    /*test('getPlatformName returns correct name', () async {
       final name = await mediaTool.getPlatformName();
       expect(
         log,
         <Matcher>[isMethodCall('getPlatformName', arguments: null)],
       );
       expect(name, equals(kPlatformName));
-    });
+    });*/
   });
 }

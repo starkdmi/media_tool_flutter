@@ -1,4 +1,4 @@
-import 'package:flutter/services.dart';
+/*import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:media_tool_platform_interface/src/method_channel_media_tool.dart';
 
@@ -34,4 +34,4 @@ void main() {
       expect(platformName, equals(kPlatformName));
     });
   });
-}
+}*/

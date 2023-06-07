@@ -1,4 +1,3 @@
-// ignore_for_file: lines_longer_than_80_chars
 import 'dart:async';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart';
@@ -9,11 +8,6 @@ class MethodChannelMediaTool extends MediaToolPlatform {
   /// The method channel used to interact with the native platform
   @visibleForTesting
   final methodChannel = const MethodChannel('media_tool');
-
-  @override
-  Future<String?> getPlatformName() {
-    throw UnimplementedError('getPlatformName() has not been implemented.');
-  }
 
   @override
   Stream<VideoCompressEvent> startVideoCompression({

@@ -39,12 +39,6 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        case "getPlatformName":
-            #if os(iOS)
-            result("iOS")
-            #elseif os(OSX)
-            result("macOS")
-            #endif
         case "startVideoCompression":
             startVideoCompression(call: call, result: result)
         case "cancelVideoCompression":
@@ -125,58 +119,58 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         // Intialize the event channel
         let stream = QueuedStreamHandler(name: "media_tool.video_compression.\(uid)", messenger: Self.messenger!)
 
-        // Event channel had set up
+        // Event channel is ready
         result(nil)
 
         // Asynchronous code
         Task.detached {
-            do {
-                // Start the compression
-                let task = await VideoTool.convert(
-                    source: sourceUrl,
-                    destination: destinationUrl,
-                    fileType: fileType,
-                    videoSettings: videoSettings,
-                    skipAudio: skipAudio,
-                    audioSettings: audioSettings,
-                    overwrite: overwrite,
-                    deleteSourceFile: deleteOrigin,
-                    callback: { state in
-                        switch state {
-                        case .started:
-                            stream.sink(true)
-                        case .progress(let progress):
-                            stream.sink(progress.fractionCompleted)
-                        case .completed(let url):
-                            stream.sink(url.path)
-                            stream.sink(FlutterEndOfEventStream)
-                        case .failed(let error):
-                            stream.sink(FlutterError(error.localizedDescription))
-                            stream.sink(FlutterEndOfEventStream)
-                        case .cancelled:
-                            stream.sink(false)
-                            stream.sink(FlutterEndOfEventStream)
-                        }
+            // Start the compression
+            let task = await VideoTool.convert(
+                source: sourceUrl,
+                destination: destinationUrl,
+                fileType: fileType,
+                videoSettings: videoSettings,
+                skipAudio: skipAudio,
+                audioSettings: audioSettings,
+                overwrite: overwrite,
+                deleteSourceFile: deleteOrigin,
+                callback: { state in
+                    switch state {
+                    case .started:
+                        stream.sink(true)
+                    case .progress(let progress):
+                        stream.sink(progress.fractionCompleted)
+                    case .completed(let url):
+                        stream.sink(url.path)
+                        stream.sink(FlutterEndOfEventStream)
+                    case .failed(let error):
+                        stream.sink(FlutterError(error.localizedDescription))
+                        stream.sink(FlutterEndOfEventStream)
+                    case .cancelled:
+                        stream.sink(false)
+                        stream.sink(FlutterEndOfEventStream)
                     }
-                )
+                }
+            )
 
-                // Store the task
-                self.operations[uid] = (task: task, stream: stream)
-            } catch let error as NSError {
-                stream.sink(FlutterError(error.localizedDescription))
-                stream.sink(FlutterEndOfEventStream)
-            }
+            // Store the task
+            self.operations[uid] = (task: task, stream: stream)
         }
     }
 
     private func cancelVideoCompression(call: FlutterMethodCall, result: FlutterResult) {
-        if let arguments = call.arguments as? [String: Any],
-            let uid = arguments["id"] as? String,
-            let operation = operations[uid] {
+        guard let arguments = call.arguments as? [String: Any], let uid = arguments["id"] as? String else {
+            result(FlutterError("Invalid arguments passed to the call"))
+            return
+        }
+
+        if let operation = operations[uid] {
+            // Cancel
             operation.task.cancel()
             operations[uid] = nil
             result(true)
         } else {
+            // Unknown ID
             result(false)
         }
     }

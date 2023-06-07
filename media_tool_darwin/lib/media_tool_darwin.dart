@@ -1,4 +1,3 @@
-// ignore_for_file: lines_longer_than_80_chars
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
@@ -12,12 +11,6 @@ class MediaToolDarwin extends MediaToolPlatform {
   /// Registers this class as the default instance of [MediaToolPlatform]
   static void registerWith() {
     MediaToolPlatform.instance = MediaToolDarwin();
-  }
-
-  @override
-  Future<String?> getPlatformName() {
-    // Get native platform name
-    return methodChannel.invokeMethod<String>('getPlatformName');
   }
 
   @override

@@ -1,9 +1,8 @@
-// ignore_for_file: lines_longer_than_80_chars
 import 'package:media_tool_platform_interface/src/method_channel_media_tool.dart';
-import 'package:media_tool_platform_interface/src/video/video.dart';
+import 'package:media_tool_platform_interface/src/video_tool/video_tool.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-export 'package:media_tool_platform_interface/src/video/video.dart';
+export 'package:media_tool_platform_interface/src/video_tool/video_tool.dart';
 
 /// The interface that implementations of media_tool must implement
 ///
@@ -31,9 +30,6 @@ abstract class MediaToolPlatform extends PlatformInterface {
     PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
-
-  /// Return the current platform name
-  Future<String?> getPlatformName();
 
   /// Compress video file
   /// [id] - Unique process ID

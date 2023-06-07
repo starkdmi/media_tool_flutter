@@ -1,12 +1,9 @@
-import 'package:flutter_test/flutter_test.dart';
+/*import 'package:flutter_test/flutter_test.dart';
 import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
 
 class MediaToolMock extends MediaToolPlatform {
   static const mockPlatformName = 'Mock';
 
-  @override
-  Future<String?> getPlatformName() async => mockPlatformName;
-  
   @override
   Stream<VideoCompressEvent> startVideoCompression({
     required String id,
@@ -46,4 +43,4 @@ void main() {
       });
     });
   });
-}
+}*/

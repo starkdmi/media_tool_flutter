@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.osx.dependency 'FlutterMacOS'
   s.ios.deployment_target = '13.0'
   s.osx.deployment_target = '11.0'
-  s.dependency 'MediaToolSwift', '1.0.2'
+  s.dependency 'MediaToolSwift', '1.0.3'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

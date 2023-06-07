@@ -41,8 +41,8 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () async {
                 try {
-                  final result = await getPlatformName();
-                  setState(() => _platformName = result);
+                  /*final result = await getPlatformName();
+                  setState(() => _platformName = result);*/
                 } catch (error) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
