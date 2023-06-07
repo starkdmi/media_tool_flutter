@@ -18,10 +18,6 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: "pub"
-    directory: "/media_tool_ios"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "pub"
-    directory: "/media_tool_macos"
+    directory: "/media_tool_darwin"
     schedule:
       interval: "daily"
