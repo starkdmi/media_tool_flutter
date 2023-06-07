@@ -38,7 +38,7 @@ enum VideoCodec {
   h264,
 
   /// H.265/HEVC
-  hevc,
+  h265,
 
   /// ProRes 4444, not all devices are supported
   prores
@@ -53,7 +53,7 @@ extension VideoCodecValue on VideoCodec {
     switch (this) {
     case VideoCodec.h264:
       return 'avc1';
-    case VideoCodec.hevc:
+    case VideoCodec.h265:
       return 'hvc1';
     case VideoCodec.prores:
       return 'ap4h';

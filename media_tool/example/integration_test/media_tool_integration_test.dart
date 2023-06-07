@@ -16,7 +16,7 @@ void main() {
           path: '$directory/media/oludeniz.MOV',
           destination: '$directory/temp/oludeniz_compressed.mov',
           videoSettings: const VideoSettings(
-            codec: VideoCodec.hevc,
+            codec: VideoCodec.h265,
             bitrate: 2000000,
             // quality: 0.7,
             size: Size(1280, 1280),
@@ -41,8 +41,6 @@ void main() {
       test('progress & cancellation', () async {
         final task = VideoTool.compress(
           id: '10002',
-          // path: '/Users/starkdmi/Downloads/oludeniz.MOV',
-          // destination: '/Users/starkdmi/Downloads/oludeniz_h264.mp4',
           path: '$directory/media/oludeniz.MOV',
           destination: '$directory/temp/oludeniz_h264.mp4',
           videoSettings: const VideoSettings(codec: VideoCodec.h264),
