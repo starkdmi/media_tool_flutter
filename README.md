@@ -27,30 +27,37 @@ Flutter plugin allows advanced media manipulation using native platform code. Me
 
 - **Windows and Linux**: _OpenCL_
 
-- **Web**:  _None_ or _[FFmpeg](https://github.com/ffmpegwasm/ffmpeg.wasm)_ - [Dart only](https://docs.flutter.dev/development/packages-and-plugins/developing-packages#dart-only-platform-implementations) using [ffmpeg_wasm](https://pub.dev/packages/ffmpeg_wasm)
+- **Web**:  _None_ **or** _[FFmpeg](https://github.com/ffmpegwasm/ffmpeg.wasm)_ - [Dart only](https://docs.flutter.dev/development/packages-and-plugins/developing-packages#dart-only-platform-implementations) using [ffmpeg_wasm](https://pub.dev/packages/ffmpeg_wasm)
 
 ### Example
 
 ```Dart
+// Compress video file
 final task = VideoTool.compress(
   id: id,
   path: path,
   destination: destination,
   videoSettings: const VideoSettings(
-    codec: VideoCodec.h265,
+    codec: VideoCodec.h264,
     bitrate: 2000000,
-    quality: 0.75,
     size: Size(1280.0, 1280.0),
   ),
   skipAudio: false,
   audioSettings: const AudioSettings(
     codec: AudioCodec.opus, 
     bitrate: 96000, 
-    sampleRate: 44100
   ),
   overwrite: true,
   deleteOrigin: false
 );
+
+// State notifier
+task.events.listen((event) { 
+  print(event)
+});
+
+// Cancellation
+task.cancel();
 ```
 
 ## Internally
