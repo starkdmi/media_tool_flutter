@@ -1,4 +1,4 @@
-## media_tool
+## Media Tool Flutter
 
 > Video, image and audio processing via native platform code.
 
@@ -20,10 +20,14 @@ Flutter plugin allows advanced media manipulation using native platform code. Me
 **WIP** - Only video compressor is implemented (!)
 
 ### Native Frameworks
-Apple - VideoToolBox via [MediaToolSwift](https://github.com/starkdmi/MediaToolSwift)
-Android - MediaCodec via [Transcoder](https://github.com/natario1/Transcoder)
-Windows, Linux - OpenCL
-Web - None or [FFmpeg](https://github.com/ffmpegwasm/ffmpeg.wasm) - [Dart only](https://docs.flutter.dev/development/packages-and-plugins/developing-packages#dart-only-platform-implementations) using [ffmpeg_wasm](https://pub.dev/packages/ffmpeg_wasm)
+
+- **Apple**: _VideoToolBox_ via [MediaToolSwift](https://github.com/starkdmi/MediaToolSwift)
+
+- **Android**: _MediaCodec_ via [Transcoder](https://github.com/natario1/Transcoder)
+
+- **Windows and Linux**: _OpenCL_
+
+- **Web**:  _None_ or _[FFmpeg](https://github.com/ffmpegwasm/ffmpeg.wasm)_ - [Dart only](https://docs.flutter.dev/development/packages-and-plugins/developing-packages#dart-only-platform-implementations) using [ffmpeg_wasm](https://pub.dev/packages/ffmpeg_wasm)
 
 ### Example
 
