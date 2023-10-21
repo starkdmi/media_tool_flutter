@@ -34,7 +34,7 @@ class VideoSettings {
 
 /// Available video codecs
 enum VideoCodec {
-  /// H.264
+  /// H.264/AVC
   h264,
 
   /// H.265/HEVC
