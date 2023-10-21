@@ -41,8 +41,10 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         switch call.method {
         case "startVideoCompression":
             startVideoCompression(call: call, result: result)
-        case "cancelVideoCompression":
-            cancelVideoCompression(call: call, result: result)
+        case "startAudioCompression":
+            startAudioCompression(call: call, result: result)
+        case "cancelCompression":
+            cancelCompression(call: call, result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -66,7 +68,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             let overwrite = arguments["overwrite"] as? Bool,
             let deleteOrigin = arguments["deleteOrigin"] as? Bool
         else {
-            result(FlutterError("Invalid arguments passed to the call"))
+            result(FlutterError("Invalid arguments passed to the video compression call"))
             return
         }
 
@@ -81,7 +83,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             let width = videoOptions["width"] as? Double,
             let height = videoOptions["height"] as? Double
         else {
-            result(FlutterError("Invalid video settings \(arguments["video"])"))
+            result(FlutterError("Invalid video settings \(String(describing: arguments["video"]))"))
             return
         }
 
@@ -98,7 +100,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                   let codec = audioOptions["codec"] as? Int,
                   let bitrate = audioOptions["bitrate"] as? Int,
                   let sampleRate = audioOptions["sampleRate"] as? Int else {
-                    result(FlutterError("Invalid audio settings \(arguments["audio"])"))
+                    result(FlutterError("Invalid audio settings \(String(describing: arguments["audio"]))"))
                     return
                   }
 
@@ -111,7 +113,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             audioSettings = nil
         }
 
-        guard let fileType = CompressionFileType(rawValue: destinationUrl.pathExtension) else {
+        guard let fileType = VideoFileType(rawValue: destinationUrl.pathExtension) else {
             result(FlutterError("Invalid destination file extension"))
             return
         }
@@ -158,7 +160,94 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         }
     }
 
-    private func cancelVideoCompression(call: FlutterMethodCall, result: FlutterResult) {
+    private func startAudioCompression(call: FlutterMethodCall, result: FlutterResult) {
+        guard let arguments = call.arguments as? [String: Any] else {
+            result(FlutterError("Empty arguments passed to the call"))
+            return
+        }
+
+        guard let uid = arguments["id"] as? String, operations[uid] == nil else {
+            result(FlutterError("Invalid or non-unique ID"))
+            return
+        }
+
+        guard
+            let path = arguments["path"] as? String,
+            let destination = arguments["destination"] as? String,
+            let overwrite = arguments["overwrite"] as? Bool,
+            let deleteOrigin = arguments["deleteOrigin"] as? Bool
+        else {
+            result(FlutterError("Invalid arguments passed to the audio compression call"))
+            return
+        }
+
+        let sourceUrl = URL(fileURLWithPath: path)
+        let destinationUrl = URL(fileURLWithPath: destination)
+
+        guard
+            let audioOptions = arguments["audio"] as? [String: Any],
+            let codec = audioOptions["codec"] as? Int,
+            let bitrate = audioOptions["bitrate"] as? Int,
+            // let quality = audioOptions["quality"] as? Int, // 0, 32, 64, 96, 127
+            let sampleRate = audioOptions["sampleRate"] as? Int
+        else {
+            result(FlutterError("Invalid audio settings \(String(describing: arguments["audio"]))"))
+            return
+        }
+
+        let audioSettings = CompressionAudioSettings(
+            codec: CompressionAudioCodec(rawValue: codec) ?? .default,
+            bitrate: bitrate != -1 ? .value(bitrate) : .auto,
+            // quality: quality != -1.0 ? quality : nil, // AVAudioQuality
+            sampleRate: sampleRate != -1 ? sampleRate : nil
+        )
+
+        guard let fileType = AudioFileType(rawValue: destinationUrl.pathExtension) else {
+            result(FlutterError("Invalid destination file extension"))
+            return
+        }
+
+        // Intialize the event channel
+        let stream = QueuedStreamHandler(name: "media_tool.audio_compression.\(uid)", messenger: Self.messenger!)
+
+        // Event channel is ready
+        result(nil)
+
+        // Asynchronous code
+        Task.detached {
+            // Start the compression
+            let task = await AudioTool.convert(
+                source: sourceUrl,
+                destination: destinationUrl,
+                fileType: fileType,
+                settings: audioSettings,
+                overwrite: overwrite,
+                deleteSourceFile: deleteOrigin,
+                callback: { state in
+                    switch state {
+                    case .started:
+                        stream.sink(true)
+                    case .progress(let progress):
+                        stream.sink(progress.fractionCompleted)
+                    case .completed(let url):
+                        stream.sink(url.path)
+                        stream.sink(FlutterEndOfEventStream)
+                    case .failed(let error):
+                        stream.sink(FlutterError(error.localizedDescription))
+                        stream.sink(FlutterEndOfEventStream)
+                    case .cancelled:
+                        stream.sink(false)
+                        stream.sink(FlutterEndOfEventStream)
+                    }
+                }
+            )
+
+            // Store the task
+            self.operations[uid] = (task: task, stream: stream)
+        }
+    }
+
+    private func cancelCompression(call: FlutterMethodCall, result: FlutterResult) {
         guard let arguments = call.arguments as? [String: Any], let uid = arguments["id"] as? String else {
             result(FlutterError("Invalid arguments passed to the call"))
             return

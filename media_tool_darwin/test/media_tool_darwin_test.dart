@@ -14,13 +14,15 @@ void main() {
       mediaTool = MediaToolDarwin();
 
       log = <MethodCall>[];
-      TestDefaultBinaryMessengerBinding.instance!.defaultBinaryMessenger
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(mediaTool.methodChannel, (methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
           case 'startVideoCompression':
             return null;
-          case 'cancelVideoCompression':
+          case 'startAudioCompression':
+            return null;
+          case 'cancelCompression':
             return null;
           default:
             return null;

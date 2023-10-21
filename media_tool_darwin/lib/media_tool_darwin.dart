@@ -66,8 +66,56 @@ class MediaToolDarwin extends MediaToolPlatform {
   }
 
   @override
-  Future<bool> cancelVideoCompression(String id) async {
+  Stream<VideoCompressEvent> startAudioCompression({
+    required String id,
+    required String path,
+    required String destination,
+    AudioSettings settings = const AudioSettings(),
+    bool overwrite = false,
+    bool deleteOrigin = false,
+  }) async* {
+    try {
+      // Initialize the compression process
+      await methodChannel.invokeMethod<bool>('startAudioCompression', {
+        'id': id,
+        'path': path,
+        'destination': destination,
+        'audio': settings.toMap(),
+        'overwrite': overwrite,
+        'deleteOrigin': deleteOrigin,
+      }); // nil
+
+      final stream = EventChannel('media_tool.audio_compression.$id')
+        .receiveBroadcastStream();
+
+      // Map events from native platform into Dart based events
+      await for (final event in stream) {
+        if (event is bool) {
+          if (event) {
+            // started
+            yield const VideoCompressStartedEvent();
+          } else {
+            // cancelled
+            yield const VideoCompressCancelledEvent();
+          }
+        } else if (event is double) {
+          // progress
+          yield VideoCompressProgressEvent(progress: event);
+        } else if (event is String) {
+          yield VideoCompressCompletedEvent(url: event);
+        } /*else {
+          throw UnimplementedError("VideoCompressEvent for this data type isn't implemented");
+        }*/
+      }
+    } catch (error) {
+      // failed
+      yield VideoCompressFailedEvent(error: error.toString());
+    }
+  }
+
+  @override
+  Future<bool> cancelCompression(String id) async {
     // Cancel video compression process
-    return await methodChannel.invokeMethod<bool>('cancelVideoCompression', { 'id': id }) ?? false;
+    return await methodChannel.invokeMethod<bool>('cancelCompression', { 'id': id }) ?? false;
   }
 }

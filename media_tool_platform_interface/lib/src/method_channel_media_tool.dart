@@ -24,7 +24,19 @@ class MethodChannelMediaTool extends MediaToolPlatform {
   }
 
   @override
-  Future<bool> cancelVideoCompression(String id) async {
-    throw UnimplementedError('cancelVideoCompression() has not been implemented.');
+  Stream<VideoCompressEvent> startAudioCompression({
+    required String id,
+    required String path,
+    required String destination,
+    AudioSettings settings = const AudioSettings(),
+    bool overwrite = false,
+    bool deleteOrigin = false,
+  }) async* {
+    throw UnimplementedError('startAudioCompression() has not been implemented.');
+  }
+
+  @override
+  Future<bool> cancelCompression(String id) async {
+    throw UnimplementedError('cancelCompression() has not been implemented.');
   }
 }

@@ -51,6 +51,22 @@ abstract class MediaToolPlatform extends PlatformInterface {
     bool deleteOrigin = false,
   });
 
-  /// Cancel current video compression process
-  Future<bool> cancelVideoCompression(String id);
+  /// Compress audio file
+  /// [id] - Unique process ID
+  /// [path] - Path location of input video file
+  /// [destination] - Path location of output video file
+  /// [settings] - Audio settings: codec, bitrate, sampleRate
+  /// [overwrite] - Should overwrite exisiting file at destination
+  /// [deleteOrigin] - Should input video file be deleted on succeed compression
+  Stream<VideoCompressEvent> startAudioCompression({
+    required String id,
+    required String path,
+    required String destination,
+    AudioSettings settings = const AudioSettings(),
+    bool overwrite = false,
+    bool deleteOrigin = false,
+  });
+
+  /// Cancel current compression process
+  Future<bool> cancelCompression(String id);
 }

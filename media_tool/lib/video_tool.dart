@@ -13,7 +13,7 @@ class VideoCompressionTask {
 
   /// Cancel current video compression process
   Future<bool> cancel() async {
-    return _platform.cancelVideoCompression(id);
+    return _platform.cancelCompression(id);
   }
 }
 
