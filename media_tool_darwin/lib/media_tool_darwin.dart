@@ -14,7 +14,7 @@ class MediaToolDarwin extends MediaToolPlatform {
   }
 
   @override
-  Stream<VideoCompressEvent> startVideoCompression({
+  Stream<CompressionEvent> startVideoCompression({
     required String id,
     required String path,
     required String destination,
@@ -45,28 +45,28 @@ class MediaToolDarwin extends MediaToolPlatform {
         if (event is bool) {
           if (event) {
             // started
-            yield const VideoCompressStartedEvent();
+            yield const CompressionStartedEvent();
           } else {
             // cancelled
-            yield const VideoCompressCancelledEvent();
+            yield const CompressionCancelledEvent();
           }
         } else if (event is double) {
           // progress
-          yield VideoCompressProgressEvent(progress: event);
+          yield CompressionProgressEvent(progress: event);
         } else if (event is String) {
-          yield VideoCompressCompletedEvent(url: event);
+          yield CompressionCompletedEvent(url: event);
         } /*else {
           throw UnimplementedError("VideoCompressEvent for this data type isn't implemented");
         }*/
       }
     } catch (error) {
       // failed
-      yield VideoCompressFailedEvent(error: error.toString());
+      yield CompressionFailedEvent(error: error.toString());
     }
   }
 
   @override
-  Stream<VideoCompressEvent> startAudioCompression({
+  Stream<CompressionEvent> startAudioCompression({
     required String id,
     required String path,
     required String destination,
@@ -93,23 +93,23 @@ class MediaToolDarwin extends MediaToolPlatform {
         if (event is bool) {
           if (event) {
             // started
-            yield const VideoCompressStartedEvent();
+            yield const CompressionStartedEvent();
           } else {
             // cancelled
-            yield const VideoCompressCancelledEvent();
+            yield const CompressionCancelledEvent();
           }
         } else if (event is double) {
           // progress
-          yield VideoCompressProgressEvent(progress: event);
+          yield CompressionProgressEvent(progress: event);
         } else if (event is String) {
-          yield VideoCompressCompletedEvent(url: event);
+          yield CompressionCompletedEvent(url: event);
         } /*else {
           throw UnimplementedError("VideoCompressEvent for this data type isn't implemented");
         }*/
       }
     } catch (error) {
       // failed
-      yield VideoCompressFailedEvent(error: error.toString());
+      yield CompressionFailedEvent(error: error.toString());
     }
   }
 

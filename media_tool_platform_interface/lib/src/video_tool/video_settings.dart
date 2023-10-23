@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:media_tool_platform_interface/src/video_tool/video_codec.dart';
 
 /// Video settings
 class VideoSettings {
@@ -30,33 +31,4 @@ class VideoSettings {
     'width': size?.width ?? -1.0,
     'height': size?.height ?? -1.0,
   };
-}
-
-/// Available video codecs
-enum VideoCodec {
-  /// H.264/AVC
-  h264,
-
-  /// H.265/HEVC
-  h265,
-
-  /// ProRes 4444, not all devices are supported
-  prores
-
-  // muxa, jpeg, apcn, apch, apcs, apco
-}
-
-/// Video codec extension
-extension VideoCodecValue on VideoCodec {
-  /// Codec identifier
-  String get id {
-    switch (this) {
-    case VideoCodec.h264:
-      return 'avc1';
-    case VideoCodec.h265:
-      return 'hvc1';
-    case VideoCodec.prores:
-      return 'ap4h';
-    }
-  }
 }

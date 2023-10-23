@@ -1,16 +1,16 @@
 /// Base class for video compression events
-abstract class VideoCompressEvent { }
+abstract class CompressionEvent { }
 
 /// Video compression started event
-class VideoCompressStartedEvent implements VideoCompressEvent { 
+class CompressionStartedEvent implements CompressionEvent { 
   /// Constant contructor
-  const VideoCompressStartedEvent();
+  const CompressionStartedEvent();
 }
 
 /// Event for progress in video compression 
-class VideoCompressProgressEvent implements VideoCompressEvent { 
+class CompressionProgressEvent implements CompressionEvent { 
   /// Public initializer
-  const VideoCompressProgressEvent({ required this.progress });
+  const CompressionProgressEvent({ required this.progress });
 
   /// Compression progress, [0.0, 1.0]
   final double progress;
@@ -21,7 +21,7 @@ class VideoCompressProgressEvent implements VideoCompressEvent {
   @override
   bool operator ==(Object other) {
     return identical(this, other) || 
-      other is VideoCompressProgressEvent && other.progress == progress;
+      other is CompressionProgressEvent && other.progress == progress;
   }
 
   @override
@@ -29,9 +29,9 @@ class VideoCompressProgressEvent implements VideoCompressEvent {
 }
 
 /// Video compression completed event
-class VideoCompressCompletedEvent implements VideoCompressEvent { 
+class CompressionCompletedEvent implements CompressionEvent { 
   /// Public initializer
-  const VideoCompressCompletedEvent({ required this.url });
+  const CompressionCompletedEvent({ required this.url });
 
   /// An url for output video file
   final String url;
@@ -42,7 +42,7 @@ class VideoCompressCompletedEvent implements VideoCompressEvent {
   @override
   bool operator ==(Object other) {
     return identical(this, other) || 
-      other is VideoCompressCompletedEvent && other.url == url;
+      other is CompressionCompletedEvent && other.url == url;
   }
 
   @override
@@ -50,15 +50,15 @@ class VideoCompressCompletedEvent implements VideoCompressEvent {
 }
 
 /// Video compression cancelled event
-class VideoCompressCancelledEvent implements VideoCompressEvent { 
+class CompressionCancelledEvent implements CompressionEvent { 
   /// Constant contructor
-  const VideoCompressCancelledEvent();
+  const CompressionCancelledEvent();
 }
 
 /// Video compression failed event
-class VideoCompressFailedEvent implements VideoCompressEvent {
+class CompressionFailedEvent implements CompressionEvent {
   /// Public initializer
-  const VideoCompressFailedEvent({ required this.error });
+  const CompressionFailedEvent({ required this.error });
 
   /// An error in video compression process
   final String error;
@@ -69,7 +69,7 @@ class VideoCompressFailedEvent implements VideoCompressEvent {
   @override
   bool operator ==(Object other) {
     return identical(this, other) || 
-      other is VideoCompressFailedEvent && other.error == error;
+      other is CompressionFailedEvent && other.error == error;
   }
 
   @override

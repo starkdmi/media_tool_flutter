@@ -10,7 +10,7 @@ class MethodChannelMediaTool extends MediaToolPlatform {
   final methodChannel = const MethodChannel('media_tool');
 
   @override
-  Stream<VideoCompressEvent> startVideoCompression({
+  Stream<CompressionEvent> startVideoCompression({
     required String id,
     required String path,
     required String destination,
@@ -24,7 +24,7 @@ class MethodChannelMediaTool extends MediaToolPlatform {
   }
 
   @override
-  Stream<VideoCompressEvent> startAudioCompression({
+  Stream<CompressionEvent> startAudioCompression({
     required String id,
     required String path,
     required String destination,

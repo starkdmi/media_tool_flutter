@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:media_tool_platform_interface/src/video_tool/image_settings.dart';
+import 'package:media_tool_platform_interface/src/image_tool/image_format.dart';
 
 /// Image info
 class ImageInfo {

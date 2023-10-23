@@ -1,7 +1,9 @@
+import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
 import 'package:media_tool_platform_interface/src/method_channel_media_tool.dart';
-import 'package:media_tool_platform_interface/src/video_tool/video_tool.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+export 'package:media_tool_platform_interface/src/audio_tool/audio_tool.dart';
+export 'package:media_tool_platform_interface/src/image_tool/image_tool.dart';
 export 'package:media_tool_platform_interface/src/video_tool/video_tool.dart';
 
 /// The interface that implementations of media_tool must implement
@@ -40,7 +42,7 @@ abstract class MediaToolPlatform extends PlatformInterface {
   /// [audioSettings] - Audio settings: codec, bitrate, sampleRate
   /// [overwrite] - Should overwrite exisiting file at destination
   /// [deleteOrigin] - Should input video file be deleted on succeed compression
-  Stream<VideoCompressEvent> startVideoCompression({
+  Stream<CompressionEvent> startVideoCompression({
     required String id,
     required String path,
     required String destination,
@@ -58,7 +60,7 @@ abstract class MediaToolPlatform extends PlatformInterface {
   /// [settings] - Audio settings: codec, bitrate, sampleRate
   /// [overwrite] - Should overwrite exisiting file at destination
   /// [deleteOrigin] - Should input audio file be deleted on succeed compression
-  Stream<VideoCompressEvent> startAudioCompression({
+  Stream<CompressionEvent> startAudioCompression({
     required String id,
     required String path,
     required String destination,

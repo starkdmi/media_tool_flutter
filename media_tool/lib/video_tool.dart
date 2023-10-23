@@ -9,7 +9,7 @@ class VideoCompressionTask {
   final String id;
 
   /// An events stream
-  final Stream<VideoCompressEvent> events;
+  final Stream<CompressionEvent> events;
 
   /// Cancel current video compression process
   Future<bool> cancel() async {

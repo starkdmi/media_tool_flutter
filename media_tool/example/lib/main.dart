@@ -26,8 +26,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _uuid = const Uuid();
   VideoCompressionTask? _task;
-  StreamSubscription<VideoCompressEvent>? _subscription;
-  VideoCompressEvent? _event;
+  StreamSubscription<CompressionEvent>? _subscription;
+  CompressionEvent? _event;
 
   @override void dispose() {
     _subscription?.cancel();
