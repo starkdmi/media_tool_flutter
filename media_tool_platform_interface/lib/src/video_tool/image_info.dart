@@ -73,4 +73,20 @@ class ImageInfo {
       return null;
     }
   }
+
+  /// Serialize to json
+  Map<String, dynamic> toMap() => {
+    'format': format.id,
+    'width': size.width,
+    'height': size.height,
+    'hasAlpha': hasAlpha,
+    'isHDR': isHDR,
+    'isAnimated': isAnimated,
+    'orientation': orientation,
+    'frameRate': frameRate,
+    'duration': duration,
+  };
+
+  /// Custom debug info
+  @override String toString() => toMap().toString();
 }

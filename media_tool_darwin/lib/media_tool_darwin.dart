@@ -133,7 +133,7 @@ class MediaToolDarwin extends MediaToolPlatform {
     bool overwrite = false,
     bool deleteOrigin = false,
   }) async {
-    final data = await methodChannel.invokeMethod<Map<String, dynamic>>('imageCompression', {
+    final data = await methodChannel.invokeMethod<Map<Object?, Object?>>('imageCompression', {
       'path': path,
       'destination': destination,
       'settings': settings.toMap(),
@@ -141,6 +141,11 @@ class MediaToolDarwin extends MediaToolPlatform {
       'deleteOrigin': deleteOrigin,
     });
 
-    return data == null ? null : ImageInfo.fromMap(data);
+    // Convert dict key from `Object?` to `String`
+    final dict = data?.map((key, value) {
+      return MapEntry<String, Object?>(key is String ? key : key.toString(), value);
+    });
+
+    return dict == null ? null : ImageInfo.fromMap(dict);
   }
 }

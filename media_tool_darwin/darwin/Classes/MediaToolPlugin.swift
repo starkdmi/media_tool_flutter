@@ -321,7 +321,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                     "hasAlpha": info.hasAlpha,
                     "isHDR": info.isHDR,
                     "isAnimated": info.isAnimated,
-                    "orientation": info.orientation.rawValue,
+                    "orientation": info.orientation?.rawValue,
                     "frameRate": info.frameRate,
                     "duration": info.duration
                 ]
