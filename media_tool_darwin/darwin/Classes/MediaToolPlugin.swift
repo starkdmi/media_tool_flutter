@@ -45,6 +45,8 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             startAudioCompression(call: call, result: result)
         case "cancelCompression":
             cancelCompression(call: call, result: result)
+        case "imageCompression":
+            imageCompression(call: call, result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -261,6 +263,73 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         } else {
             // Unknown ID
             result(false)
+        }
+    }
+
+    private func imageCompression(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let arguments = call.arguments as? [String: Any] else {
+            result(FlutterError("Empty arguments passed to the call"))
+            return
+        }
+
+        guard
+            let path = arguments["path"] as? String,
+            let destination = arguments["destination"] as? String,
+            let overwrite = arguments["overwrite"] as? Bool,
+            let deleteOrigin = arguments["deleteOrigin"] as? Bool
+        else {
+            result(FlutterError("Invalid arguments passed to the audio compression call"))
+            return
+        }
+
+        guard
+            let imageOptions = arguments["settings"] as? [String: Any],
+            let format = imageOptions["format"] as? String,
+            let quality = imageOptions["quality"] as? Double,
+            let width = imageOptions["width"] as? Double,
+            let height = imageOptions["height"] as? Double
+        else {
+            result(FlutterError("Invalid image settings \(String(describing: arguments["settings"]))"))
+            return
+        }
+        let size = width != -1.0 && height != -1.0 ? CGSize(width: width, height: height) : .zero
+
+        let imageSettings = ImageSettings(
+            format: format != "" ? ImageFormat(rawValue: format) : nil,
+            size: size != .zero ? .fit(size) : .original,
+            quality: quality != -1.0 ? quality : nil
+        )
+
+        let sourceUrl = URL(fileURLWithPath: path)
+        let destinationUrl = URL(fileURLWithPath: destination)
+
+        DispatchQueue.global().async {
+            do {
+                let info = try ImageTool.convert(
+                    source: sourceUrl,
+                    destination: destinationUrl,
+                    settings: imageSettings,
+                    skipMetadata: false,
+                    overwrite: overwrite,
+                    deleteSourceFile: deleteOrigin
+                )
+
+                let dict: [String: Any] = [
+                    "format": info.format.rawValue,
+                    "width": info.size.width,
+                    "height": info.size.height,
+                    "hasAlpha": info.hasAlpha,
+                    "isHDR": info.isHDR,
+                    "isAnimated": info.isAnimated,
+                    "orientation": info.orientation.rawValue,
+                    "frameRate": info.frameRate,
+                    "duration": info.duration
+                ]
+
+                result(dict)
+            } catch let error {
+                result(FlutterError(error.localizedDescription))
+            }
         }
     }
 }

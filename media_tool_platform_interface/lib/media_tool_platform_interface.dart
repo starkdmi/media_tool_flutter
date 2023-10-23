@@ -57,7 +57,7 @@ abstract class MediaToolPlatform extends PlatformInterface {
   /// [destination] - Path location of output video file
   /// [settings] - Audio settings: codec, bitrate, sampleRate
   /// [overwrite] - Should overwrite exisiting file at destination
-  /// [deleteOrigin] - Should input video file be deleted on succeed compression
+  /// [deleteOrigin] - Should input audio file be deleted on succeed compression
   Stream<VideoCompressEvent> startAudioCompression({
     required String id,
     required String path,
@@ -69,4 +69,18 @@ abstract class MediaToolPlatform extends PlatformInterface {
 
   /// Cancel current compression process
   Future<bool> cancelCompression(String id);
+
+  /// Convert image file
+  /// [path] - Path location of input video file
+  /// [destination] - Path location of output video file
+  /// [settings] - Image settings: format, quality, size
+  /// [overwrite] - Should overwrite exisiting file at destination
+  /// [deleteOrigin] - Should input image file be deleted on succeed compression
+  Future<ImageInfo?> imageCompression({
+    required String path,
+    required String destination,
+    ImageSettings settings = const ImageSettings(),
+    bool overwrite = false,
+    bool deleteOrigin = false,
+  });
 }

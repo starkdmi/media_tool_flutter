@@ -118,4 +118,29 @@ class MediaToolDarwin extends MediaToolPlatform {
     // Cancel video compression process
     return await methodChannel.invokeMethod<bool>('cancelCompression', { 'id': id }) ?? false;
   }
+
+  /// Convert image file
+  /// [path] - Path location of input video file
+  /// [destination] - Path location of output video file
+  /// [settings] - Image settings: format, quality, size
+  /// [overwrite] - Should overwrite exisiting file at destination
+  /// [deleteOrigin] - Should input image file be deleted on succeed compression
+  @override
+  Future<ImageInfo?> imageCompression({
+    required String path,
+    required String destination,
+    ImageSettings settings = const ImageSettings(),
+    bool overwrite = false,
+    bool deleteOrigin = false,
+  }) async {
+    final data = await methodChannel.invokeMethod<Map<String, dynamic>>('imageCompression', {
+      'path': path,
+      'destination': destination,
+      'settings': settings.toMap(),
+      'overwrite': overwrite,
+      'deleteOrigin': deleteOrigin,
+    });
+
+    return data == null ? null : ImageInfo.fromMap(data);
+  }
 }

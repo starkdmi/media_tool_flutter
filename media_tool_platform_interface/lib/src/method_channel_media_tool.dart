@@ -39,4 +39,15 @@ class MethodChannelMediaTool extends MediaToolPlatform {
   Future<bool> cancelCompression(String id) async {
     throw UnimplementedError('cancelCompression() has not been implemented.');
   }
+
+  @override
+  Future<ImageInfo?> imageCompression({
+    required String path,
+    required String destination,
+    ImageSettings settings = const ImageSettings(),
+    bool overwrite = false,
+    bool deleteOrigin = false,
+  }) async {
+    throw UnimplementedError('imageCompression() has not been implemented.');
+  }
 }
