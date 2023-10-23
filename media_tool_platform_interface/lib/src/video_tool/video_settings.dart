@@ -9,6 +9,9 @@ class VideoSettings {
     this.bitrate,
     this.quality,
     this.size,
+    this.frameRate,
+    this.preserveAlphaChannel = true,
+    this.disableHardwareAcceleration = false,
   });
 
   /// Video codec
@@ -23,6 +26,15 @@ class VideoSettings {
   /// Video resolution to fit in
   final Size? size;
 
+  /// Video frame rate
+  final int? frameRate;
+
+  /// A flag to preserve alpha channel in video
+  final bool preserveAlphaChannel;
+
+  /// A flag to disable video hardware acceleration
+  final bool disableHardwareAcceleration;
+
   /// Serialize to json
   Map<String, dynamic> toMap() => {
     'codec': codec?.id ?? '',
@@ -30,5 +42,8 @@ class VideoSettings {
     'quality': quality ?? -1.0,
     'width': size?.width ?? -1.0,
     'height': size?.height ?? -1.0,
+    'frameRate': frameRate ?? -1.0,
+    'keepAlpha': preserveAlphaChannel,
+    'hardwareAcceleration': !disableHardwareAcceleration,
   };
 }

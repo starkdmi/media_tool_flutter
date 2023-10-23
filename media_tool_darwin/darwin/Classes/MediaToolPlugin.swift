@@ -83,7 +83,10 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             let bitrate = videoOptions["bitrate"] as? Int,
             let quality = videoOptions["quality"] as? Double,
             let width = videoOptions["width"] as? Double,
-            let height = videoOptions["height"] as? Double
+            let height = videoOptions["height"] as? Double,
+            let frameRate = videoOptions["frameRate"] as? Int,
+            let preserveAlphaChannel = videoOptions["keepAlpha"] as? Bool,
+            let hardwareAcceleration = videoOptions["hardwareAcceleration"] as? Bool
         else {
             result(FlutterError("Invalid video settings \(String(describing: arguments["video"]))"))
             return
@@ -93,7 +96,10 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             codec: codec != "" ? AVVideoCodecType(rawValue: codec) : nil,
             bitrate: bitrate != -1 ? .value(bitrate) : .auto,
             quality: quality != -1.0 ? quality : nil,
-            size: width != -1.0 && height != -1.0 ? CGSize(width: width, height: height) : nil
+            size: width != -1.0 && height != -1.0 ? CGSize(width: width, height: height) : nil,
+            frameRate: frameRate != -1.0 ? frameRate : nil,
+            preserveAlphaChannel: preserveAlphaChannel,
+            hardwareAcceleration: hardwareAcceleration == false ? .disabled : .auto
         )
 
         let audioSettings: CompressionAudioSettings?
