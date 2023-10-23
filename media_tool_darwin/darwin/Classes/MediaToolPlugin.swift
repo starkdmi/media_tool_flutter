@@ -101,6 +101,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             guard let audioOptions = arguments["audio"] as? [String: Any],
                   let codec = audioOptions["codec"] as? Int,
                   let bitrate = audioOptions["bitrate"] as? Int,
+                  let quality = audioOptions["quality"] as? Int,
                   let sampleRate = audioOptions["sampleRate"] as? Int else {
                     result(FlutterError("Invalid audio settings \(String(describing: arguments["audio"]))"))
                     return
@@ -109,6 +110,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             audioSettings = CompressionAudioSettings(
                 codec: CompressionAudioCodec(rawValue: codec) ?? .default,
                 bitrate: bitrate != -1 ? .value(bitrate) : .auto,
+                quality: quality != -1.0 ? AVAudioQuality(rawValue: quality) : nil,
                 sampleRate: sampleRate != -1 ? sampleRate : nil
             )
         } else {
@@ -190,7 +192,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             let audioOptions = arguments["audio"] as? [String: Any],
             let codec = audioOptions["codec"] as? Int,
             let bitrate = audioOptions["bitrate"] as? Int,
-            // let quality = audioOptions["quality"] as? Int, // 0, 32, 64, 96, 127
+            let quality = audioOptions["quality"] as? Int,
             let sampleRate = audioOptions["sampleRate"] as? Int
         else {
             result(FlutterError("Invalid audio settings \(String(describing: arguments["audio"]))"))
@@ -200,7 +202,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         let audioSettings = CompressionAudioSettings(
             codec: CompressionAudioCodec(rawValue: codec) ?? .default,
             bitrate: bitrate != -1 ? .value(bitrate) : .auto,
-            // quality: quality != -1.0 ? quality : nil, // AVAudioQuality
+            quality: quality != -1.0 ? AVAudioQuality(rawValue: quality) : nil,
             sampleRate: sampleRate != -1 ? sampleRate : nil
         )
 
