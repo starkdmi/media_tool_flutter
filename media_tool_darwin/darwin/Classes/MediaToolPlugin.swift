@@ -295,17 +295,48 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             let format = imageOptions["format"] as? String,
             let quality = imageOptions["quality"] as? Double,
             let width = imageOptions["width"] as? Double,
-            let height = imageOptions["height"] as? Double
+            let height = imageOptions["height"] as? Double,
+            let crop = imageOptions["crop"] as? Bool,
+            let frameRate = imageOptions["frameRate"] as? Int,
+            let skipAnimation = imageOptions["skipAnimation"] as? Bool,
+            let preserveAlphaChannel = imageOptions["keepAlpha"] as? Bool,
+            let embedThumbnail = imageOptions["embedThumbnail"] as? Bool,
+            let optimizeColorForSharing = imageOptions["optimizeColors"] as? Bool,
+            let backgroundColorComponents = imageOptions["backgroundColor"] as? [Int]
         else {
             result(FlutterError("Invalid image settings \(String(describing: arguments["settings"]))"))
             return
         }
-        let size = width != -1.0 && height != -1.0 ? CGSize(width: width, height: height) : .zero
+
+        // Size configuration
+        var size = ImageSize.original
+        if width != -1.0 && height != -1.0 {
+            let resolution = CGSize(width: width, height: height)
+            size = crop ? .crop(options: Crop(size: resolution)) : .fit(resolution)
+        }
+
+        // Convert array of color components to `CGColor`
+        var backgroundColor: CGColor?
+        if !backgroundColorComponents.isEmpty {
+            do {
+                let red = backgroundColor[0] / 255
+                let green = backgroundColor[1] / 255
+                let blue = backgroundColor[2] / 255
+                let alpha = backgroundColor.count >= 4 ? backgroundColor[3] : 1.0
+                backgroundColor = CGColor(red: red, green: green, blue: blue, alpha: alpha)
+            } catch { }
+        }
 
         let imageSettings = ImageSettings(
             format: format != "" ? ImageFormat(rawValue: format) : nil,
-            size: size != .zero ? .fit(size) : .original,
-            quality: quality != -1.0 ? quality : nil
+            size: size,
+            quality: quality != -1.0 ? quality : nil,
+            frameRate: frameRate != -1.0 ? frameRate : nil,
+            skipAnimation: skipAnimation,
+            preserveAlphaChannel: preserveAlphaChannel,
+            embedThumbnail: embedThumbnail,
+            optimizeColors: optimizeColors,
+            backgroundColor: backgroundColor
         )
 
         let sourceUrl = URL(fileURLWithPath: path)
