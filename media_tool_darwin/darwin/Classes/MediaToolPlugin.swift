@@ -97,7 +97,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             bitrate: bitrate != -1 ? .value(bitrate) : .auto,
             quality: quality != -1.0 ? quality : nil,
             size: width != -1.0 && height != -1.0 ? CGSize(width: width, height: height) : nil,
-            frameRate: frameRate != -1.0 ? frameRate : nil,
+            frameRate: frameRate != -1 ? frameRate : nil,
             preserveAlphaChannel: preserveAlphaChannel,
             hardwareAcceleration: hardwareAcceleration == false ? .disabled : .auto
         )
@@ -116,7 +116,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             audioSettings = CompressionAudioSettings(
                 codec: CompressionAudioCodec(rawValue: codec) ?? .default,
                 bitrate: bitrate != -1 ? .value(bitrate) : .auto,
-                quality: quality != -1.0 ? AVAudioQuality(rawValue: quality) : nil,
+                quality: quality != -1 ? AVAudioQuality(rawValue: quality) : nil,
                 sampleRate: sampleRate != -1 ? sampleRate : nil
             )
         } else {
@@ -208,7 +208,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         let audioSettings = CompressionAudioSettings(
             codec: CompressionAudioCodec(rawValue: codec) ?? .default,
             bitrate: bitrate != -1 ? .value(bitrate) : .auto,
-            quality: quality != -1.0 ? AVAudioQuality(rawValue: quality) : nil,
+            quality: quality != -1 ? AVAudioQuality(rawValue: quality) : nil,
             sampleRate: sampleRate != -1 ? sampleRate : nil
         )
 
@@ -317,25 +317,28 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
 
         // Convert array of color components to `CGColor`
         var backgroundColor: CGColor?
-        if !backgroundColorComponents.isEmpty {
-            do {
-                let red = backgroundColor[0] / 255
-                let green = backgroundColor[1] / 255
-                let blue = backgroundColor[2] / 255
-                let alpha = backgroundColor.count >= 4 ? backgroundColor[3] : 1.0
-                backgroundColor = CGColor(red: red, green: green, blue: blue, alpha: alpha)
-            } catch { }
+        if !backgroundColorComponents.isEmpty, backgroundColorComponents.count >= 3 {
+            let red = backgroundColorComponents[0]
+            let green = backgroundColorComponents[1]
+            let blue = backgroundColorComponents[2]
+            let alpha = backgroundColorComponents.count >= 4 ? backgroundColorComponents[3] : 255
+            backgroundColor = CGColor(
+                red: Double(red) / 255.0,
+                green: Double(green) / 255.0,
+                blue: Double(blue) / 255.0,
+                alpha: Double(alpha) / 255.0
+            )
         }
 
         let imageSettings = ImageSettings(
             format: format != "" ? ImageFormat(rawValue: format) : nil,
             size: size,
-            quality: quality != -1.0 ? quality : nil,
-            frameRate: frameRate != -1.0 ? frameRate : nil,
+            quality: quality != -1 ? quality : nil,
+            frameRate: frameRate != -1 ? frameRate : nil,
             skipAnimation: skipAnimation,
             preserveAlphaChannel: preserveAlphaChannel,
             embedThumbnail: embedThumbnail,
-            optimizeColors: optimizeColors,
+            optimizeColorForSharing: optimizeColorForSharing,
             backgroundColor: backgroundColor
         )
 
@@ -360,9 +363,9 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                     "hasAlpha": info.hasAlpha,
                     "isHDR": info.isHDR,
                     "isAnimated": info.isAnimated,
-                    "orientation": info.orientation?.rawValue,
-                    "frameRate": info.frameRate,
-                    "duration": info.duration
+                    "orientation": info.orientation?.rawValue ?? 1,
+                    "frameRate": info.frameRate as Any,
+                    "duration": info.duration as Any
                 ]
 
                 result(dict)
