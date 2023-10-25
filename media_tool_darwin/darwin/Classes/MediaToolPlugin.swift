@@ -7,7 +7,9 @@ import Flutter
 import FlutterMacOS
 #endif
 
+/// `FlutterError` extension
 public extension FlutterError {
+    /// Initialize `FlutterError` using `String`
     convenience init(_ message: String) {
         self.init(
             code: "CompressionError",
@@ -17,9 +19,12 @@ public extension FlutterError {
     }
 }
 
+/// MediaTool plugin
 public class MediaToolPlugin: NSObject, FlutterPlugin {
+    /// Binary messenger
     static var messenger: FlutterBinaryMessenger?
 
+    /// Initialize method channel
     public static func register(with registrar: FlutterPluginRegistrar) {
         #if os(iOS)
         Self.messenger = registrar.messenger()
@@ -35,8 +40,10 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
 
+    /// Active compression operations
     private var operations: [String: (task: CompressionTask, stream: FlutterStreamHandler)] = [:]
 
+    /// Requests router
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "startVideoCompression":
@@ -47,11 +54,14 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             cancelCompression(call: call, result: result)
         case "imageCompression":
             imageCompression(call: call, result: result)
+        case "videoThumbnails":
+            videoThumbnails(call: call, result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
     }
 
+    /// Process video compression request
     private func startVideoCompression(call: FlutterMethodCall, result: FlutterResult) {
         guard let arguments = call.arguments as? [String: Any] else {
             result(FlutterError("Empty arguments passed to the call"))
@@ -70,57 +80,33 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             let overwrite = arguments["overwrite"] as? Bool,
             let deleteOrigin = arguments["deleteOrigin"] as? Bool
         else {
-            result(FlutterError("Invalid arguments passed to the video compression call"))
+            result(FlutterError("Invalid arguments passed to the call"))
             return
         }
 
         let sourceUrl = URL(fileURLWithPath: path)
         let destinationUrl = URL(fileURLWithPath: destination)
 
+        // Video settings
         guard
-            let videoOptions = arguments["video"] as? [String: Any],
-            let codec = videoOptions["codec"] as? String,
-            let bitrate = videoOptions["bitrate"] as? Int,
-            let quality = videoOptions["quality"] as? Double,
-            let width = videoOptions["width"] as? Double,
-            let height = videoOptions["height"] as? Double,
-            let frameRate = videoOptions["frameRate"] as? Int,
-            let preserveAlphaChannel = videoOptions["keepAlpha"] as? Bool,
-            let hardwareAcceleration = videoOptions["hardwareAcceleration"] as? Bool
+            let videoJSON = arguments["video"] as? [String: Any],
+            let videoData = try? JSONSerialization.data(withJSONObject: videoJSON),
+            let videoSettings = try? JSONDecoder().decode(CompressionVideoSettings.self, from: videoData)
         else {
             result(FlutterError("Invalid video settings \(String(describing: arguments["video"]))"))
             return
         }
 
-        let videoSettings = CompressionVideoSettings(
-            codec: codec != "" ? AVVideoCodecType(rawValue: codec) : nil,
-            bitrate: bitrate != -1 ? .value(bitrate) : .auto,
-            quality: quality != -1.0 ? quality : nil,
-            size: width != -1.0 && height != -1.0 ? CGSize(width: width, height: height) : nil,
-            frameRate: frameRate != -1 ? frameRate : nil,
-            preserveAlphaChannel: preserveAlphaChannel,
-            hardwareAcceleration: hardwareAcceleration == false ? .disabled : .auto
-        )
-
-        let audioSettings: CompressionAudioSettings?
-        if !skipAudio {
-            guard let audioOptions = arguments["audio"] as? [String: Any],
-                  let codec = audioOptions["codec"] as? Int,
-                  let bitrate = audioOptions["bitrate"] as? Int,
-                  let quality = audioOptions["quality"] as? Int,
-                  let sampleRate = audioOptions["sampleRate"] as? Int else {
-                    result(FlutterError("Invalid audio settings \(String(describing: arguments["audio"]))"))
-                    return
-                  }
-
-            audioSettings = CompressionAudioSettings(
-                codec: CompressionAudioCodec(rawValue: codec) ?? .default,
-                bitrate: bitrate != -1 ? .value(bitrate) : .auto,
-                quality: quality != -1 ? AVAudioQuality(rawValue: quality) : nil,
-                sampleRate: sampleRate != -1 ? sampleRate : nil
-            )
-        } else {
-            audioSettings = nil
+        // Audio settings
+        var audioSettings: CompressionAudioSettings?
+        if !skipAudio, let json = arguments["audio"] as? [String: Any] {
+            guard let data = try? JSONSerialization.data(withJSONObject: json),
+                let settings = try? JSONDecoder().decode(CompressionAudioSettings.self, from: data)
+            else {
+                result(FlutterError("Invalid audio settings \(String(describing: arguments["audio"]))"))
+                return
+            }
+            audioSettings = settings
         }
 
         guard let fileType = VideoFileType(rawValue: destinationUrl.pathExtension) else {
@@ -170,6 +156,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         }
     }
 
+    /// Process audio compression request
     private func startAudioCompression(call: FlutterMethodCall, result: FlutterResult) {
         guard let arguments = call.arguments as? [String: Any] else {
             result(FlutterError("Empty arguments passed to the call"))
@@ -194,23 +181,15 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         let sourceUrl = URL(fileURLWithPath: path)
         let destinationUrl = URL(fileURLWithPath: destination)
 
+        // Audio settings
         guard
-            let audioOptions = arguments["audio"] as? [String: Any],
-            let codec = audioOptions["codec"] as? Int,
-            let bitrate = audioOptions["bitrate"] as? Int,
-            let quality = audioOptions["quality"] as? Int,
-            let sampleRate = audioOptions["sampleRate"] as? Int
+            let json = arguments["audio"] as? [String: Any],
+            let data = try? JSONSerialization.data(withJSONObject: json),
+            let settings = try? JSONDecoder().decode(CompressionAudioSettings.self, from: data)
         else {
             result(FlutterError("Invalid audio settings \(String(describing: arguments["audio"]))"))
             return
         }
-
-        let audioSettings = CompressionAudioSettings(
-            codec: CompressionAudioCodec(rawValue: codec) ?? .default,
-            bitrate: bitrate != -1 ? .value(bitrate) : .auto,
-            quality: quality != -1 ? AVAudioQuality(rawValue: quality) : nil,
-            sampleRate: sampleRate != -1 ? sampleRate : nil
-        )
 
         guard let fileType = AudioFileType(rawValue: destinationUrl.pathExtension) else {
             result(FlutterError("Invalid destination file extension"))
@@ -230,7 +209,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                 source: sourceUrl,
                 destination: destinationUrl,
                 fileType: fileType,
-                settings: audioSettings,
+                settings: settings,
                 overwrite: overwrite,
                 deleteSourceFile: deleteOrigin,
                 callback: { state in
@@ -257,6 +236,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         }
     }
 
+    /// Cancel compression request by id
     private func cancelCompression(call: FlutterMethodCall, result: FlutterResult) {
         guard let arguments = call.arguments as? [String: Any], let uid = arguments["id"] as? String else {
             result(FlutterError("Invalid arguments passed to the call"))
@@ -274,6 +254,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         }
     }
 
+    /// Process image compression request
     private func imageCompression(call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let arguments = call.arguments as? [String: Any] else {
             result(FlutterError("Empty arguments passed to the call"))
@@ -290,60 +271,18 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             return
         }
 
+        let sourceUrl = URL(fileURLWithPath: path)
+        let destinationUrl = URL(fileURLWithPath: destination)
+
+        // Image settings
         guard
-            let imageOptions = arguments["settings"] as? [String: Any],
-            let format = imageOptions["format"] as? String,
-            let quality = imageOptions["quality"] as? Double,
-            let width = imageOptions["width"] as? Double,
-            let height = imageOptions["height"] as? Double,
-            let crop = imageOptions["crop"] as? Bool,
-            let frameRate = imageOptions["frameRate"] as? Int,
-            let skipAnimation = imageOptions["skipAnimation"] as? Bool,
-            let preserveAlphaChannel = imageOptions["keepAlpha"] as? Bool,
-            let embedThumbnail = imageOptions["embedThumbnail"] as? Bool,
-            let optimizeColorForSharing = imageOptions["optimizeColors"] as? Bool,
-            let backgroundColorComponents = imageOptions["backgroundColor"] as? [Int]
+            let json = arguments["settings"] as? [String: Any],
+            let data = try? JSONSerialization.data(withJSONObject: json),
+            let settings = try? JSONDecoder().decode(ImageSettings.self, from: data)
         else {
             result(FlutterError("Invalid image settings \(String(describing: arguments["settings"]))"))
             return
         }
-
-        // Size configuration
-        var size = ImageSize.original
-        if width != -1.0 && height != -1.0 {
-            let resolution = CGSize(width: width, height: height)
-            size = crop ? .crop(options: Crop(size: resolution)) : .fit(resolution)
-        }
-
-        // Convert array of color components to `CGColor`
-        var backgroundColor: CGColor?
-        if !backgroundColorComponents.isEmpty, backgroundColorComponents.count >= 3 {
-            let red = backgroundColorComponents[0]
-            let green = backgroundColorComponents[1]
-            let blue = backgroundColorComponents[2]
-            let alpha = backgroundColorComponents.count >= 4 ? backgroundColorComponents[3] : 255
-            backgroundColor = CGColor(
-                red: Double(red) / 255.0,
-                green: Double(green) / 255.0,
-                blue: Double(blue) / 255.0,
-                alpha: Double(alpha) / 255.0
-            )
-        }
-
-        let imageSettings = ImageSettings(
-            format: format != "" ? ImageFormat(rawValue: format) : nil,
-            size: size,
-            quality: quality != -1 ? quality : nil,
-            frameRate: frameRate != -1 ? frameRate : nil,
-            skipAnimation: skipAnimation,
-            preserveAlphaChannel: preserveAlphaChannel,
-            embedThumbnail: embedThumbnail,
-            optimizeColorForSharing: optimizeColorForSharing,
-            backgroundColor: backgroundColor
-        )
-
-        let sourceUrl = URL(fileURLWithPath: path)
-        let destinationUrl = URL(fileURLWithPath: destination)
 
         DispatchQueue.global().async {
             do {
@@ -356,22 +295,76 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                     deleteSourceFile: deleteOrigin
                 )
 
-                let dict: [String: Any] = [
-                    "format": info.format.rawValue,
-                    "width": info.size.width,
-                    "height": info.size.height,
-                    "hasAlpha": info.hasAlpha,
-                    "isHDR": info.isHDR,
-                    "isAnimated": info.isAnimated,
-                    "orientation": info.orientation?.rawValue ?? 1,
-                    "frameRate": info.frameRate as Any,
-                    "duration": info.duration as Any
-                ]
-
-                result(dict)
+                let data = JSONEncoder().encode(info)
+                DispatchQueue.main.async {
+                    result(data)
+                }
             } catch let error {
-                result(FlutterError(error.localizedDescription))
+                DispatchQueue.main.async {
+                    result(FlutterError(error.localizedDescription))
+                }
             }
+        }
+    }
+
+    /// Process video thumbnails request
+    private func videoThumbnails(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let arguments = call.arguments as? [String: Any] else {
+            result(FlutterError("Empty arguments passed to the call"))
+            return
+        }
+
+        guard
+            let path = arguments["path"] as? String,
+            let transfrom = arguments["transfrom"] as? Bool,
+            let timeToleranceBefore = arguments["timeToleranceBefore"] as? Double,
+            let timeToleranceAfter = arguments["timeToleranceAfter"] as? Double
+        else {
+            result(FlutterError("Invalid arguments passed to the video thumbnails call"))
+            return
+        }
+
+        // Requests
+        guard
+            let json = arguments["requests"],
+            let data = try? JSONSerialization.data(withJSONObject: json),
+            let requests = try? JSONDecoder().decode([VideoThumbnailRequest].self, from: data)
+        else {
+            result(FlutterError("Invalid video thumbnail requests \(String(describing: arguments["requests"]))"))
+            return
+        }
+
+        // Image settings
+        guard
+            let imageJSON = arguments["image"] as? [String: Any],
+            let imageData = try? JSONSerialization.data(withJSONObject: imageJSON),
+            let imageSettings = try? JSONDecoder().decode(ImageSettings.self, from: imageData)
+        else {
+            result(FlutterError("Invalid image settings \(String(describing: arguments["image"]))"))
+            return
+        }
+
+        DispatchQueue.global().async {
+            VideoTool.thumbnailFiles(
+                of: asset,
+                at: requests,
+                settings: imageSettings,
+                timeToleranceBefore: timeToleranceBefore ?? .zero,
+                timeToleranceAfter: timeToleranceAfter ?? .zero,
+                completion: { result in
+                    switch result {
+                    case .success(items): // [VideoThumbnailFile]
+                        let data = JSONEncoder().encode(items)
+                        DispatchQueue.main.async {
+                            result(data)
+                        }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                            result(FlutterError(error.localizedDescription))
+                        }
+                    }
+                }
+            )
         }
     }
 }
