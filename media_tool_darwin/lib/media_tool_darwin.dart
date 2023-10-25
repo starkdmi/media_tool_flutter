@@ -30,9 +30,9 @@ class MediaToolDarwin extends MediaToolPlatform {
         'id': id,
         'path': path,
         'destination': destination,
-        'video': videoSettings.toMap(),
+        'video': videoSettings.toJson(),
         'skipAudio': skipAudio,
-        'audio': skipAudio ? null : audioSettings.toMap(),
+        'audio': skipAudio ? null : audioSettings.toJson(),
         'overwrite': overwrite,
         'deleteOrigin': deleteOrigin,
       }); // nil
@@ -80,7 +80,7 @@ class MediaToolDarwin extends MediaToolPlatform {
         'id': id,
         'path': path,
         'destination': destination,
-        'audio': settings.toMap(),
+        'audio': settings.toJson(),
         'overwrite': overwrite,
         'deleteOrigin': deleteOrigin,
       }); // nil
@@ -133,10 +133,11 @@ class MediaToolDarwin extends MediaToolPlatform {
     bool overwrite = false,
     bool deleteOrigin = false,
   }) async {
+    // Run the image compression
     final data = await methodChannel.invokeMethod<Map<Object?, Object?>>('imageCompression', {
       'path': path,
       'destination': destination,
-      'settings': settings.toMap(),
+      'settings': settings.toJson(),
       'overwrite': overwrite,
       'deleteOrigin': deleteOrigin,
     });
@@ -146,6 +147,6 @@ class MediaToolDarwin extends MediaToolPlatform {
       return MapEntry<String, Object?>(key is String ? key : key.toString(), value);
     });
 
-    return dict == null ? null : ImageInfo.fromMap(dict);
+    return dict == null ? null : ImageInfo.fromJson(dict);
   }
 }

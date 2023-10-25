@@ -43,7 +43,7 @@ class ImageInfo {
   final double? duration;
 
   /// Initializer using JSON
-  static ImageInfo? fromMap(Map<String, dynamic> data) {
+  static ImageInfo? fromJson(Map<String, dynamic> data) { // ImageInfo.fromJson(Map<String, dynamic> json): ... ;
     try {
       final formatId = data['format'] as String;
       final format = ImageFormatValue.fromId(formatId);
@@ -74,8 +74,8 @@ class ImageInfo {
     }
   }
 
-  /// Serialize to json
-  Map<String, dynamic> toMap() => {
+  /// Serialize to JSON
+  Map<String, dynamic> toJson() => {
     'format': format.id,
     'width': size.width,
     'height': size.height,
@@ -88,5 +88,5 @@ class ImageInfo {
   };
 
   /// Custom debug info
-  @override String toString() => toMap().toString();
+  @override String toString() => toJson().toString();
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:media_tool/media_tool.dart';
+import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 

@@ -1,5 +1,5 @@
-import Foundation
 import MediaToolSwift
+import AVFoundation
 
 /// Implement JSON serialization
 extension ImageInfo: Encodable {
@@ -30,13 +30,26 @@ extension ImageInfo: Encodable {
 }
 
 /// Implement JSON deserialization
-extension VideoThumbnailRequest: Decodable { }
+extension VideoThumbnailRequest: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case time
+        case url
+    }
+
+    // Decodable conformation
+    public init(from decoder: Decoder) throws {
+        self.init()
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        time = try values.decode(Double.self, forKey: .time)
+        url = try values.decode(URL.self, forKey: .url)
+    }
+}
 
 /// Implement JSON serialization
 extension VideoThumbnailFile: Encodable {
     private enum CodingKeys: String, CodingKey {
         case url
-        case formatId
+        case format
         case width, height
         case time
     }
@@ -53,7 +66,7 @@ extension VideoThumbnailFile: Encodable {
 }
 
 /// Implement JSON deserialization
-extension VideoSettings: Decodable {
+extension CompressionVideoSettings: Decodable {
     private enum CodingKeys: String, CodingKey {
         case codec
         case bitrate
@@ -85,20 +98,24 @@ extension VideoSettings: Decodable {
             size = CGSize(width: width, height: height)
         }
 
-        // Disable hardware acceleration
-        if try? values.decode(String?.self, forKey: .hardwareAcceleration) == false {
-            hardwareAcceleration = false
+        // Hardware acceleration
+        if (try? values.decode(Bool?.self, forKey: .hardwareAcceleration)) == false {
+            hardwareAcceleration = .disabled
+        } else {
+            hardwareAcceleration = .auto
         }
 
         // Bitrate
-        if let customBitrate = try? values.decode(String?.self, forKey: .bitrate) {
+        if let customBitrate = try? values.decode(Int?.self, forKey: .bitrate) {
             bitrate = .value(customBitrate)
+        } else {
+            bitrate = .auto
         }
     }
 }
 
 /// Implement JSON deserialization
-extension AudioSettings: Decodable {
+extension CompressionAudioSettings: Decodable {
     private enum CodingKeys: String, CodingKey {
         case codec
         case bitrate
@@ -112,13 +129,18 @@ extension AudioSettings: Decodable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
         // Codec
-        if let codecId = try? values.decode(Int?.self, forKey: .codec) {
-            codec = ImageFormat(rawValue: codecId)
+        if let codecId = try? values.decode(Int?.self, forKey: .codec),
+            let audioCodec = CompressionAudioCodec(rawValue: codecId) {
+            codec = audioCodec
+        } else {
+          codec = .default
         }
 
         // Custom bitrate value
         if let customBitrate = try? values.decode(Int?.self, forKey: .bitrate) {
             bitrate = .value(customBitrate)
+        } else {
+            bitrate = .auto
         }
 
         // Audio quality

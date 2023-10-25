@@ -23,11 +23,11 @@ class AudioSettings {
   /// Audio quality, AAC and FLAC only
   final AudioQuality? quality;
 
-  /// Serialize to json
-  Map<String, dynamic> toMap() => {
-    'codec': codec?.id ?? 0,
-    'bitrate': bitrate ?? -1,
-    'sampleRate': sampleRate ?? -1,
-    'quality': quality?.value ?? -1,
+  /// Serialize to JSON
+  Map<String, dynamic> toJson() => {
+    'codec': codec?.id,
+    'bitrate': bitrate,
+    'sampleRate': sampleRate,
+    'quality': quality?.value,
   };
 }

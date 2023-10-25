@@ -98,7 +98,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         }
 
         // Audio settings
-        var audioSettings: CompressionAudioSettings?
+        let audioSettings: CompressionAudioSettings?
         if !skipAudio, let json = arguments["audio"] as? [String: Any] {
             guard let data = try? JSONSerialization.data(withJSONObject: json),
                 let settings = try? JSONDecoder().decode(CompressionAudioSettings.self, from: data)
@@ -107,6 +107,8 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                 return
             }
             audioSettings = settings
+        } else {
+            audioSettings = nil
         }
 
         guard let fileType = VideoFileType(rawValue: destinationUrl.pathExtension) else {
@@ -174,7 +176,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             let overwrite = arguments["overwrite"] as? Bool,
             let deleteOrigin = arguments["deleteOrigin"] as? Bool
         else {
-            result(FlutterError("Invalid arguments passed to the audio compression call"))
+            result(FlutterError("Invalid arguments passed to the call"))
             return
         }
 
@@ -267,7 +269,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             let overwrite = arguments["overwrite"] as? Bool,
             let deleteOrigin = arguments["deleteOrigin"] as? Bool
         else {
-            result(FlutterError("Invalid arguments passed to the audio compression call"))
+            result(FlutterError("Invalid arguments passed to the call"))
             return
         }
 
@@ -289,13 +291,13 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                 let info = try ImageTool.convert(
                     source: sourceUrl,
                     destination: destinationUrl,
-                    settings: imageSettings,
+                    settings: settings,
                     skipMetadata: false,
                     overwrite: overwrite,
                     deleteSourceFile: deleteOrigin
                 )
 
-                let data = JSONEncoder().encode(info)
+                let data = try JSONEncoder().encode(info)
                 DispatchQueue.main.async {
                     result(data)
                 }
@@ -315,14 +317,19 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         }
 
         guard
-            let path = arguments["path"] as? String,
-            let transfrom = arguments["transfrom"] as? Bool,
-            let timeToleranceBefore = arguments["timeToleranceBefore"] as? Double,
-            let timeToleranceAfter = arguments["timeToleranceAfter"] as? Double
+            let path = arguments["path"] as? String
         else {
-            result(FlutterError("Invalid arguments passed to the video thumbnails call"))
+            result(FlutterError("Invalid arguments passed to the call"))
             return
         }
+
+        // Optional arguments
+        let transfrom = (arguments["transfrom"] as? Bool) ?? true
+        let timeToleranceBefore = (arguments["timeToleranceBefore"] as? Double) ?? .zero
+        let timeToleranceAfter = (arguments["timeToleranceAfter"] as? Double) ?? .zero
+
+        let sourceUrl = URL(fileURLWithPath: path)
+        let asset = AVAsset(url: sourceUrl)
 
         // Requests
         guard
@@ -349,14 +356,21 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                 of: asset,
                 at: requests,
                 settings: imageSettings,
-                timeToleranceBefore: timeToleranceBefore ?? .zero,
-                timeToleranceAfter: timeToleranceAfter ?? .zero,
-                completion: { result in
-                    switch result {
-                    case .success(items): // [VideoThumbnailFile]
-                        let data = JSONEncoder().encode(items)
-                        DispatchQueue.main.async {
-                            result(data)
+                transfrom: transfrom,
+                timeToleranceBefore: timeToleranceBefore,
+                timeToleranceAfter: timeToleranceAfter,
+                completion: { response in
+                    switch response {
+                    case .success(let items): // [VideoThumbnailFile]
+                        do {
+                            let files = try JSONEncoder().encode(items)
+                            DispatchQueue.main.async {
+                                result(files)
+                            }
+                        } catch let error {
+                            DispatchQueue.main.async {
+                                result(FlutterError(error.localizedDescription))
+                            }
                         }
                     case .failure(let error):
                         DispatchQueue.main.async {

@@ -42,4 +42,23 @@ class VideoTool {
     );
     return VideoCompressionTask(id: id, events: stream);
   }
+
+  /// Generate video thumbnails
+  /*Future<List<VideoThumbnail>> videoThumbnails({
+    required String path,
+    required List<VideoThumbnailItem> requests,
+    ImageSettings settings = const ImageSettings(),
+    bool transfrom = true,
+    double? timeToleranceBefore,
+    double? timeToleranceAfter,
+  }) {
+    return _platform.videoThumbnails(
+      path: path,
+      requests: requests,
+      settings: settings,
+      transfrom: transfrom,
+      timeToleranceBefore: timeToleranceBefore,
+      timeToleranceAfter: timeToleranceAfter,
+    );
+  }*/
 }

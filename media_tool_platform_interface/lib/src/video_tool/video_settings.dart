@@ -35,14 +35,14 @@ class VideoSettings {
   /// A flag to disable video hardware acceleration
   final bool disableHardwareAcceleration;
 
-  /// Serialize to json
-  Map<String, dynamic> toMap() => {
-    'codec': codec?.id ?? '',
-    'bitrate': bitrate ?? -1,
-    'quality': quality ?? -1.0,
-    'width': size?.width ?? -1.0,
-    'height': size?.height ?? -1.0,
-    'frameRate': frameRate ?? -1.0,
+  /// Serialize to JSON
+  Map<String, dynamic> toJson() => {
+    'codec': codec?.id,
+    'bitrate': bitrate,
+    'quality': quality,
+    'width': size?.width,
+    'height': size?.height,
+    'frameRate': frameRate,
     'keepAlpha': preserveAlphaChannel,
     'hardwareAcceleration': !disableHardwareAcceleration,
   };

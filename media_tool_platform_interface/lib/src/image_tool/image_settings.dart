@@ -48,20 +48,20 @@ class ImageSettings {
   /// Used when [preserveAlphaChannel] is set to `false` or alpha channel is not supported by output image format
   final Color? backgroundColor;
 
-  /// Serialize to json
-  Map<String, dynamic> toMap() => {
-    'format': format?.id ?? '',
-    'quality': quality ?? -1.0,
-    'width': size?.width ?? -1.0,
-    'height': size?.height ?? -1.0,
+  /// Serialize to JSON
+  Map<String, dynamic> toJson() => {
+    'format': format?.id,
+    'quality': quality,
+    'width': size?.width,
+    'height': size?.height,
     'crop': crop,
-    'frameRate': frameRate ?? -1.0,
+    'frameRate': frameRate,
     'skipAnimation': skipAnimation,
     'keepAlpha': preserveAlphaChannel,
     'embedThumbnail': embedThumbnail,
     'optimizeColors': optimizeColors,
     'backgroundColor': backgroundColor == null ? <int>[] : <int>[
-      backgroundColor!.red,backgroundColor!.green, backgroundColor!.blue, backgroundColor!.alpha,
+      backgroundColor!.red, backgroundColor!.green, backgroundColor!.blue, backgroundColor!.alpha,
     ],
   };
 }

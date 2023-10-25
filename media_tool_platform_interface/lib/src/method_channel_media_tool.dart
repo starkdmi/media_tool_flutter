@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart';
 import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
+import 'package:media_tool_platform_interface/src/video_tool/video_thumbnail.dart';
 
 /// An implementation of [MediaToolPlatform] that uses method channels
 class MethodChannelMediaTool extends MediaToolPlatform {
@@ -50,4 +51,16 @@ class MethodChannelMediaTool extends MediaToolPlatform {
   }) async {
     throw UnimplementedError('imageCompression() has not been implemented.');
   }
+
+  /*@override
+  Future<List<VideoThumbnail>> videoThumbnails({
+    required String path,
+    required List<VideoThumbnailItem> requests,
+    ImageSettings settings = const ImageSettings(),
+    bool transfrom = true,
+    double? timeToleranceBefore,
+    double? timeToleranceAfter,
+  }) async {
+    throw UnimplementedError('videoThumbnails() has not been implemented.');
+  }*/
 }
