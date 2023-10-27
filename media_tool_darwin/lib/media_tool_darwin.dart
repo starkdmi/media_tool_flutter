@@ -149,4 +149,45 @@ class MediaToolDarwin extends MediaToolPlatform {
 
     return dict == null ? null : ImageInfo.fromJson(dict);
   }
+
+  /// Extract thumbnails from video file
+  /// [path] - Path location of input video file
+  /// [requests] - Time points of thumbnails including destination path for each
+  /// [settings] - Image settings: format, quality, size
+  /// [transfrom] - A flag to apply preferred source video tranformations to thumbnail
+  /// [timeToleranceBefore] - Time tolerance before specified time, in seconds
+  /// [timeToleranceAfter] - Time tolerance after specified time, in seconds
+  @override
+  Future<List<VideoThumbnail>> videoThumbnails({
+    required String path,
+    required List<VideoThumbnailItem> requests,
+    ImageSettings settings = const ImageSettings(),
+    bool transfrom = true,
+    double? timeToleranceBefore,
+    double? timeToleranceAfter,
+  }) async {
+    // Execute thumbnail generation
+    final entries = await methodChannel.invokeMethod<List<Map<Object?, Object?>>>('videoThumbnails', {
+      'path': path,
+      'requests': requests.map((r) => r.toJson()).toList(),
+      'settings': settings.toJson(),
+      'transfrom': transfrom,
+      'timeToleranceBefore': timeToleranceBefore,
+      'timeToleranceAfter': timeToleranceAfter,
+    });
+    print(entries);
+
+    return entries?.map((entry) {
+      // Convert dict key from `Object?` to `String`
+      final data = entry.map((key, value) {
+        return MapEntry<String, Object?>(key is String ? key : key.toString(), value);
+      });
+
+      // Serialize thumbnail file object
+      return VideoThumbnail.fromJson(data);
+    })
+    // Skip empty results
+    .whereType<VideoThumbnail>()
+    .toList() ?? [];
+  }
 }
