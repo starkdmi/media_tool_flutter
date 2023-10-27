@@ -143,9 +143,11 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                     case .completed(let url):
                         stream.sink(url.path)
                         stream.sink(FlutterEndOfEventStream)
+                        self.operations[uid] = nil
                     case .failed(let error):
                         stream.sink(FlutterError(error.localizedDescription))
                         stream.sink(FlutterEndOfEventStream)
+                        self.operations[uid] = nil
                     case .cancelled:
                         stream.sink(false)
                         stream.sink(FlutterEndOfEventStream)
@@ -223,9 +225,11 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                     case .completed(let url):
                         stream.sink(url.path)
                         stream.sink(FlutterEndOfEventStream)
+                        self.operations[uid] = nil
                     case .failed(let error):
                         stream.sink(FlutterError(error.localizedDescription))
                         stream.sink(FlutterEndOfEventStream)
+                        self.operations[uid] = nil
                     case .cancelled:
                         stream.sink(false)
                         stream.sink(FlutterEndOfEventStream)
