@@ -48,9 +48,9 @@ class ImageInfo {
       final formatId = data['format'] as String;
       final format = ImageFormatValue.fromId(formatId);
 
-      final width = data['width'] as double;
-      final height = data['width'] as double;
-      final size = Size(width, height);
+      final width = data['width'] as num;
+      final height = data['height'] as num;
+      final size = Size(width.toDouble(), height.toDouble());
 
       final hasAlpha = data['hasAlpha'] as bool;
       final isHDR = data['isHDR'] as bool;

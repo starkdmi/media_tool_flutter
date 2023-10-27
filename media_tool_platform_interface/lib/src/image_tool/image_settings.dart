@@ -60,8 +60,6 @@ class ImageSettings {
     'keepAlpha': preserveAlphaChannel,
     'embedThumbnail': embedThumbnail,
     'optimizeColors': optimizeColors,
-    'backgroundColor': backgroundColor == null ? <int>[] : <int>[
-      backgroundColor!.red, backgroundColor!.green, backgroundColor!.blue, backgroundColor!.alpha,
-    ],
+    'backgroundColor': backgroundColor?.value,
   };
 }

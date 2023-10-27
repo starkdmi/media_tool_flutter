@@ -9,7 +9,7 @@ extension ImageInfo: Encodable {
         case hasAlpha
         case isHDR
         case orientation
-        case framesCount
+        case isAnimated // framesCount
         case frameRate // nullable
         case duration // nullable
     }
@@ -23,7 +23,7 @@ extension ImageInfo: Encodable {
         try container.encode(hasAlpha, forKey: .hasAlpha)
         try container.encode(isHDR, forKey: .isHDR)
         try container.encode(orientation?.rawValue ?? 1, forKey: .orientation)
-        try container.encode(framesCount, forKey: .framesCount)
+        try container.encode(isAnimated, forKey: .isAnimated)
         try container.encode(frameRate, forKey: .frameRate)
         try container.encode(duration, forKey: .duration)
     }
@@ -38,10 +38,10 @@ extension VideoThumbnailRequest: Decodable {
 
     // Decodable conformation
     public init(from decoder: Decoder) throws {
-        self.init()
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        time = try values.decode(Double.self, forKey: .time)
-        url = try values.decode(URL.self, forKey: .url)
+        let time = try values.decode(Double.self, forKey: .time)
+        let url = try values.decode(URL.self, forKey: .url)
+        self.init(time: time, url: url)
     }
 }
 
@@ -79,26 +79,28 @@ extension CompressionVideoSettings: Decodable {
 
     // Decodable conformation
     public init(from decoder: Decoder) throws {
-        self.init()
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
         // Parse basic/unmodified keys
-        quality = try? values.decode(Double?.self, forKey: .quality)
-        frameRate = try? values.decode(Int?.self, forKey: .frameRate)
-        preserveAlphaChannel = (try? values.decode(Bool?.self, forKey: .preserveAlphaChannel)) ?? true
+        let quality = try? values.decode(Double?.self, forKey: .quality)
+        let frameRate = try? values.decode(Int?.self, forKey: .frameRate)
+        let preserveAlphaChannel = (try? values.decode(Bool?.self, forKey: .preserveAlphaChannel)) ?? true
 
         // Codec
+        var codec: AVVideoCodecType?
         if let codecId = try? values.decode(String?.self, forKey: .codec) {
             codec = AVVideoCodecType(rawValue: codecId)
         }
 
         // Video size
+        var size: CGSize?
         if let width = try? values.decode(Double?.self, forKey: .width),
             let height = try? values.decode(Double?.self, forKey: .height) {
             size = CGSize(width: width, height: height)
         }
 
         // Hardware acceleration
+        let hardwareAcceleration: CompressionHardwareAcceleration
         if (try? values.decode(Bool?.self, forKey: .hardwareAcceleration)) == false {
             hardwareAcceleration = .disabled
         } else {
@@ -106,11 +108,22 @@ extension CompressionVideoSettings: Decodable {
         }
 
         // Bitrate
+        let bitrate: CompressionVideoBitrate
         if let customBitrate = try? values.decode(Int?.self, forKey: .bitrate) {
             bitrate = .value(customBitrate)
         } else {
             bitrate = .auto
         }
+
+        self.init(
+            codec: codec,
+            bitrate: bitrate,
+            quality: quality,
+            size: size,
+            frameRate: frameRate,
+            preserveAlphaChannel: preserveAlphaChannel,
+            hardwareAcceleration: hardwareAcceleration
+        )
     }
 }
 
@@ -125,10 +138,10 @@ extension CompressionAudioSettings: Decodable {
 
     // Decodable conformation
     public init(from decoder: Decoder) throws {
-        self.init()
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
         // Codec
+        let codec: CompressionAudioCodec
         if let codecId = try? values.decode(Int?.self, forKey: .codec),
             let audioCodec = CompressionAudioCodec(rawValue: codecId) {
             codec = audioCodec
@@ -137,6 +150,7 @@ extension CompressionAudioSettings: Decodable {
         }
 
         // Custom bitrate value
+        let bitrate: CompressionAudioBitrate
         if let customBitrate = try? values.decode(Int?.self, forKey: .bitrate) {
             bitrate = .value(customBitrate)
         } else {
@@ -144,12 +158,20 @@ extension CompressionAudioSettings: Decodable {
         }
 
         // Audio quality
+        var quality: AVAudioQuality?
         if let qualityValue = try? values.decode(Int?.self, forKey: .quality) {
             quality = AVAudioQuality(rawValue: qualityValue)
         }
 
         // Sample rate
-        sampleRate = try? values.decode(Int?.self, forKey: .sampleRate)
+        let sampleRate = try? values.decode(Int?.self, forKey: .sampleRate)
+
+        self.init(
+            codec: codec,
+            bitrate: bitrate,
+            quality: quality,
+            sampleRate: sampleRate
+        )
     }
 }
 
@@ -169,23 +191,24 @@ extension ImageSettings: Decodable {
 
     // Decodable conformation
     public init(from decoder: Decoder) throws {
-        self.init()
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
         // Parse basic/unmodified keys
-        quality = try? values.decode(Double?.self, forKey: .quality)
-        frameRate = try? values.decode(Int?.self, forKey: .frameRate)
-        skipAnimation = (try? values.decode(Bool?.self, forKey: .skipAnimation)) ?? false
-        preserveAlphaChannel = (try? values.decode(Bool?.self, forKey: .preserveAlphaChannel)) ?? true
-        embedThumbnail = (try? values.decode(Bool?.self, forKey: .embedThumbnail)) ?? false
-        optimizeColorForSharing = (try? values.decode(Bool?.self, forKey: .optimizeColorForSharing)) ?? false
+        let quality = try? values.decode(Double?.self, forKey: .quality)
+        let frameRate = try? values.decode(Int?.self, forKey: .frameRate)
+        let skipAnimation = (try? values.decode(Bool?.self, forKey: .skipAnimation)) ?? false
+        let preserveAlphaChannel = (try? values.decode(Bool?.self, forKey: .preserveAlphaChannel)) ?? true
+        let embedThumbnail = (try? values.decode(Bool?.self, forKey: .embedThumbnail)) ?? false
+        let optimizeColorForSharing = (try? values.decode(Bool?.self, forKey: .optimizeColorForSharing)) ?? false
 
         // Retreive format from the string id
+        var format: ImageFormat?
         if let formatId = try? values.decode(String?.self, forKey: .format) {
             format = ImageFormat(rawValue: formatId)
         }
 
         // Initialize `ImageSize` via passed width, height and crop fields
+        let size: ImageSize
         if let width = try? values.decode(Double?.self, forKey: .width),
             let height = try? values.decode(Double?.self, forKey: .height) {
             let resolution = CGSize(width: width, height: height)
@@ -195,13 +218,14 @@ extension ImageSettings: Decodable {
             size = .original
         }
 
-        // Convert array of color components to `CGColor`
-        let backgroundColorComponents: [Int] = (try? values.decode([Int].self, forKey: .backgroundColor)) ?? []
-        if !backgroundColorComponents.isEmpty, backgroundColorComponents.count >= 3 {
-            let red = backgroundColorComponents[0]
-            let green = backgroundColorComponents[1]
-            let blue = backgroundColorComponents[2]
-            let alpha = backgroundColorComponents.count >= 4 ? backgroundColorComponents[3] : 255
+        // Convert 32-bit integer color value to `CGColor`
+        var backgroundColor: CGColor?
+        if let color = try? values.decode(Int?.self, forKey: .backgroundColor) {
+            let alpha = (color >> 24) & 0xFF
+            let red = (color >> 16) & 0xFF
+            let green = (color >> 8) & 0xFF
+            let blue = color & 0xFF
+
             backgroundColor = CGColor(
                 red: Double(red) / 255.0,
                 green: Double(green) / 255.0,
@@ -209,5 +233,17 @@ extension ImageSettings: Decodable {
                 alpha: Double(alpha) / 255.0
             )
         }
+
+        self.init(
+            format: format,
+            size: size,
+            quality: quality,
+            frameRate: frameRate,
+            skipAnimation: skipAnimation,
+            preserveAlphaChannel: preserveAlphaChannel,
+            embedThumbnail: embedThumbnail,
+            optimizeColorForSharing: optimizeColorForSharing,
+            backgroundColor: backgroundColor
+        )
     }
 }

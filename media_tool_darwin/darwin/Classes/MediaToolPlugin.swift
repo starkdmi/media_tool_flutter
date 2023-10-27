@@ -298,8 +298,9 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                 )
 
                 let data = try JSONEncoder().encode(info)
+                let json = try JSONSerialization.jsonObject(with: data, options: [])
                 DispatchQueue.main.async {
-                    result(data)
+                    result(json)
                 }
             } catch let error {
                 DispatchQueue.main.async {
