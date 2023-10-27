@@ -46,7 +46,7 @@ class VideoThumbnail {
   };*/
 
   /// Initializer using JSON
-  static VideoThumbnail? fromMap(Map<String, dynamic> data) { // VideoThumbnail.fromJson(Map<String, dynamic> json): ... ;
+  static VideoThumbnail? fromJson(Map<String, dynamic> data) { // VideoThumbnail.fromJson(Map<String, dynamic> json): ... ;
     try {
       final time = data['time'] as double;
       final path = data['path'] as String;

@@ -44,7 +44,7 @@ class VideoTool {
   }
 
   /// Generate video thumbnails
-  /*Future<List<VideoThumbnail>> videoThumbnails({
+  static Future<List<VideoThumbnail>> videoThumbnails({
     required String path,
     required List<VideoThumbnailItem> requests,
     ImageSettings settings = const ImageSettings(),
@@ -60,5 +60,5 @@ class VideoTool {
       timeToleranceBefore: timeToleranceBefore,
       timeToleranceAfter: timeToleranceAfter,
     );
-  }*/
+  }
 }

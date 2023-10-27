@@ -1,6 +1,5 @@
 import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
 import 'package:media_tool_platform_interface/src/method_channel_media_tool.dart';
-import 'package:media_tool_platform_interface/src/video_tool/video_thumbnail.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 export 'package:media_tool_platform_interface/src/audio_tool/audio_tool.dart';
@@ -94,12 +93,12 @@ abstract class MediaToolPlatform extends PlatformInterface {
   /// [transfrom] - A flag to apply preferred source video tranformations to thumbnail
   /// [timeToleranceBefore] - Time tolerance before specified time, in seconds
   /// [timeToleranceAfter] - Time tolerance after specified time, in seconds
-  /*Future<List<VideoThumbnail>> videoThumbnails({
+  Future<List<VideoThumbnail>> videoThumbnails({
     required String path,
     required List<VideoThumbnailItem> requests,
     ImageSettings settings = const ImageSettings(),
     bool transfrom = true,
     double? timeToleranceBefore,
     double? timeToleranceAfter,
-  });*/
+  });
 }
