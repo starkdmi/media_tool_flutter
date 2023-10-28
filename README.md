@@ -4,26 +4,24 @@
 
 ## WIP
 
-Only Apple platforms are supported for now and only the main video operations.
+Only Apple (iOS & macOS) support is implemented yet.
 
 ## About
 
 Flutter plugin allows advanced media manipulation using native platform code. Media types and operations:
 - **Video**: compress/convert, resize, crop, trim, rotate, frame rate, apply filters, video stabilization, audio track manipulataion, metadata processing, thumbnail, animated video previews, video information
 
-- **Image**: convert, resize, crop, rotate, flip, remove background, apply filters, adjust frame rate, thumnail, image information
+- **Image**: convert, resize, crop, rotate, flip, remove background, apply filters, adjust frame rate, thumbnail, image information
 
 - **Audio**: convert, cut, adjust speed, generate waveworm data, audio information
 
 ## Video
 
-**WIP** - Only video compressor is implemented (!)
-
 ### Native Frameworks
 
 - **Apple**: _VideoToolBox_ via [MediaToolSwift](https://github.com/starkdmi/MediaToolSwift)
 
-- **Android**: _MediaCodec_ via [Transcoder](https://github.com/natario1/Transcoder)
+- **Android**: _MediaCodec_ via [Transcoder](https://github.com/natario1/Transcoder) or [LightCompressor](https://github.com/AbedElazizShe/LightCompressor)
 
 - **Windows and Linux**: _OpenCL_
 
@@ -66,5 +64,5 @@ Each plugin methods which run platform code do support multiple parallel executi
 
 ## License
 
-The Plugin is licensed under the MIT. The platform implementation may have their own licenses:
+The Plugin is licensed under the MIT. The platform implementations may have their own licenses:
 - MediaToolSwift - Mozilla Public License 2.0
