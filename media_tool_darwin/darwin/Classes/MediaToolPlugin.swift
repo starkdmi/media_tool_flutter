@@ -8,18 +8,6 @@ import Flutter
 import FlutterMacOS
 #endif
 
-/// `FlutterError` extension
-public extension FlutterError {
-    /// Initialize `FlutterError` using `String`
-    convenience init(_ message: String) {
-        self.init(
-            code: "CompressionError",
-            message: message,
-            details: nil
-        )
-    }
-}
-
 /// MediaTool plugin
 public class MediaToolPlugin: NSObject, FlutterPlugin {
     /// Binary messenger

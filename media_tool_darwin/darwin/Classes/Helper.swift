@@ -1,6 +1,24 @@
 import MediaToolSwift
 import AVFoundation
 
+#if os(iOS)
+import Flutter
+#elseif os(OSX)
+import FlutterMacOS
+#endif
+
+/// `FlutterError` extension
+public extension FlutterError {
+    /// Initialize `FlutterError` using `String`
+    convenience init(_ message: String) {
+        self.init(
+            code: "CompressionError",
+            message: message,
+            details: nil
+        )
+    }
+}
+
 /// Implement JSON serialization
 extension ImageInfo: Encodable {
     private enum CodingKeys: String, CodingKey {
