@@ -167,7 +167,7 @@ class MediaToolDarwin extends MediaToolPlatform {
     double? timeToleranceAfter,
   }) async {
     // Execute thumbnail generation
-    final entries = await methodChannel.invokeMethod<List<Map<Object?, Object?>>>('videoThumbnails', {
+    final entries = await methodChannel.invokeMethod<List<Object?>>('videoThumbnails', {
       'path': path,
       'requests': requests.map((r) => r.toJson()).toList(),
       'settings': settings.toJson(),
@@ -175,13 +175,13 @@ class MediaToolDarwin extends MediaToolPlatform {
       'timeToleranceBefore': timeToleranceBefore,
       'timeToleranceAfter': timeToleranceAfter,
     });
-    print(entries);
 
+    // Process list of JSON objects
     return entries?.map((entry) {
-      // Convert dict key from `Object?` to `String`
-      final data = entry.map((key, value) {
-        return MapEntry<String, Object?>(key is String ? key : key.toString(), value);
-      });
+      if (entry == null) return null;
+
+      // Convert Object? to Map<String, Object?>
+      final data = Map<String, Object?>.from(entry as Map<dynamic, dynamic>);
 
       // Serialize thumbnail file object
       return VideoThumbnail.fromJson(data);

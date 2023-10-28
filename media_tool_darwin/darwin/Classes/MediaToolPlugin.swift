@@ -1,5 +1,6 @@
 import MediaToolSwift
 import AVFoundation
+import os
 
 #if os(iOS)
 import Flutter
@@ -348,11 +349,11 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
 
         // Image settings
         guard
-            let imageJSON = arguments["image"] as? [String: Any],
+            let imageJSON = arguments["settings"] as? [String: Any],
             let imageData = try? JSONSerialization.data(withJSONObject: imageJSON),
             let imageSettings = try? JSONDecoder().decode(ImageSettings.self, from: imageData)
         else {
-            result(FlutterError("Invalid image settings \(String(describing: arguments["image"]))"))
+            result(FlutterError("Invalid image settings \(String(describing: arguments["settings"]))"))
             return
         }
 
@@ -365,19 +366,18 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                 timeToleranceBefore: timeToleranceBefore,
                 timeToleranceAfter: timeToleranceAfter,
                 completion: { response in
-                    switch response {
-                    case .success(let items): // [VideoThumbnailFile]
-                        do {
-                            let files = try JSONEncoder().encode(items)
+                    do {
+                        switch response {
+                        case .success(let files): // [VideoThumbnailFile]
+                            let data = try JSONEncoder().encode(files)
+                            let json = try JSONSerialization.jsonObject(with: data, options: [])
                             DispatchQueue.main.async {
-                                result(files)
+                                result(json)
                             }
-                        } catch let error {
-                            DispatchQueue.main.async {
-                                result(FlutterError(error.localizedDescription))
-                            }
+                        case .failure(let error):
+                            throw error
                         }
-                    case .failure(let error):
+                    } catch let error {
                         DispatchQueue.main.async {
                             result(FlutterError(error.localizedDescription))
                         }

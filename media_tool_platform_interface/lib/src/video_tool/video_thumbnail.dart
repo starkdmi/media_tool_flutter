@@ -49,7 +49,7 @@ class VideoThumbnail {
   static VideoThumbnail? fromJson(Map<String, dynamic> data) { // VideoThumbnail.fromJson(Map<String, dynamic> json): ... ;
     try {
       final time = data['time'] as double;
-      final path = data['path'] as String;
+      final path = data['url'] as String;
 
       final formatId = data['format'] as String;
       final format = ImageFormatValue.fromId(formatId);
