@@ -22,6 +22,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>$(FLUTTER_BUILD_NAME) needs access to the Documents directory to open files.</string>
 	<key>NSDownloadsFolderUsageDescription</key>
 	<string>$(FLUTTER_BUILD_NAME) needs access to the Downloads directory to open files.</string>
 	<key>NSHumanReadableCopyright</key>
