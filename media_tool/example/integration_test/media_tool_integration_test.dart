@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:media_tool/media_tool.dart';
+import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -11,10 +13,14 @@ void main() {
 
     group('VideoTool', () {
       test('compress single', () async {
+        final file = File('$directory/media/oludeniz.MOV');
+        final path = await copyToTmp(file, 'oludeniz.MOV');
+        final destination = '${directory}temp/oludeniz_compressed.mov';
+    
         final task = VideoTool.compress(
           id: '10001',
-          path: '$directory/media/oludeniz.MOV',
-          destination: '$directory/temp/oludeniz_compressed.mov',
+          path: path, // '$directory/media/oludeniz.MOV',
+          destination: destination,
           videoSettings: const VideoSettings(
             codec: VideoCodec.h265,
             bitrate: 2000000,
@@ -30,11 +36,8 @@ void main() {
           overwrite: true,
           // deleteOrigin: true,
         );
-        /*await for (final event in task.events) {
-          print(event);
-        }*/
         expect(task.events, emitsThrough(
-          VideoCompressCompletedEvent(url: '$directory/temp/oludeniz_compressed.mov'),
+          CompressionCompletedEvent(url: destination),
         ),);
       });
 
@@ -42,13 +45,13 @@ void main() {
         final task = VideoTool.compress(
           id: '10002',
           path: '$directory/media/oludeniz.MOV',
-          destination: '$directory/temp/oludeniz_h264.mp4',
+          destination: '${directory}temp/oludeniz_h264.mp4',
           videoSettings: const VideoSettings(codec: VideoCodec.h264),
           skipAudio: true,
           overwrite: true,
         );
 
-        Future.delayed(const Duration(milliseconds: 1250), () async {
+        Future.delayed(const Duration(milliseconds: 750), () async {
           await task.cancel();
         });
 
@@ -60,9 +63,93 @@ void main() {
         ]),);*/
 
         expect(task.events, emitsThrough(
-          const VideoCompressCancelledEvent(),
+          const CompressionCancelledEvent(),
+        ),);
+      });
+
+      test('generate video thumbnails', () async {
+        final file = File('$directory/media/bigbuckbunny.mp4'); // oludeniz.MOV
+        final path = await copyToTmp(file, 'bigbuckbunny.mp4');
+        final destination = '${directory}temp/thumbnails';
+
+        final thumbnails = await VideoTool.videoThumbnails(
+          path: path,
+          requests: [
+            VideoThumbnailItem(time: 1.5, path: '$destination/thumb_1_5.png'),
+          ],
+          settings: const ImageSettings(
+            format: ImageFormat.png,
+          ),
+        );
+        expect(thumbnails, isNotEmpty);
+      });
+    });
+
+    group('AudioTool', () {
+      test('compress single', () async {
+        // Copy nasa_on_a_mission.mp3 to temp directory for tests
+        final file = File('$directory/media/nasa_on_a_mission.mp3');
+        final path = await copyToTmp(file, 'nasa_on_a_mission.mp3');
+        final destination = '${directory}temp/nasa_on_a_mission.m4a';
+
+        final task = AudioTool.compress(
+          id: '20001',
+          path: path,
+          destination: destination,
+          settings: const AudioSettings(
+            codec: AudioCodec.flac,
+            bitrate: 96000,
+            // sampleRate: 44100,
+          ),
+          overwrite: true,
+          // deleteOrigin: true,
+        );
+        expect(task.events, emitsThrough(
+          CompressionCompletedEvent(url: destination),
         ),);
       });
     });
+
+    group('ImageTool', () {
+      test('compress single', () async {
+        // Copy cat.jpg to temp directory for tests
+        final file = File('$directory/media/cat.jpg');
+        final path = await copyToTmp(file, 'cat.jpg');
+        final destination = '${directory}temp/cat.png';
+
+        final info = await ImageTool.compress(
+          path: path,
+          destination: destination,
+          settings: const ImageSettings(
+            format: ImageFormat.png,
+            quality: 0.95,
+            size: Size(256, 256),
+            crop: true,
+            frameRate: 30,
+            skipAnimation: true,
+            preserveAlphaChannel: false,
+            embedThumbnail: true,
+            optimizeColors: true,
+            backgroundColor: Color(0xFFFF9000),
+          ),
+          overwrite: true,
+          // deleteOrigin: true,
+        );
+        expect(info?.format, equals(ImageFormat.png));
+      });
+    });
   });
+}
+
+/// Copy media file to custom directory at `/tmp`
+Future<String> copyToTmp(File source, String filename) async {
+  final temp = Directory('/tmp/media_tool_test');
+  if (!temp.existsSync()) {
+    await temp.create(recursive: true);
+  }
+  final path = '${temp.path}/$filename';
+  if (!File(path).existsSync()) {
+    await source.copy(path);
+  }
+  return path;
 }
