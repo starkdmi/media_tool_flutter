@@ -110,6 +110,31 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: const Text('Cancel'),
               ),
+
+              /*ElevatedButton(
+                onPressed: () async {
+                  final result = await FilePicker.platform.pickFiles();
+                  final path = result?.files.first.path;
+                  if (path == null) return;
+                  debugPrint(path);
+
+                  final temp = await getTemporaryDirectory();
+                  final destination = '${temp.path}/thumbnail_1_5.png';
+                  debugPrint(destination);
+
+                  final thumbnails = await VideoTool.videoThumbnails(
+                    path: path,
+                    requests: [
+                      VideoThumbnailItem(time: 1.5, path: destination),
+                    ],
+                    settings: const ImageSettings(
+                      format: ImageFormat.png,
+                    ),
+                  );
+                  debugPrint(thumbnails.toString());
+                }, 
+                child: const Text('Thumbnail'),
+              ),*/
           ],
         ),
       ),
