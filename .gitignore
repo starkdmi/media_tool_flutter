@@ -46,3 +46,5 @@ build/
 .project
 .classpath
 .settings
+
+media_tool_ffmpeg

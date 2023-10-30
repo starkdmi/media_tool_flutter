@@ -13,12 +13,18 @@ flutter:
         default_package: media_tool_darwin
       macos:
         default_package: media_tool_darwin
+      android:
+        package: media_tool_ffmpeg
+        default_package: media_tool_ffmpeg
+        pluginClass: MediaToolFFmpeg
 
 dependencies:
   flutter:
     sdk: flutter
   media_tool_darwin:
     path: ../media_tool_darwin
+  media_tool_ffmpeg:
+    path: ../media_tool_ffmpeg
   media_tool_platform_interface:
     path: ../media_tool_platform_interface
 
