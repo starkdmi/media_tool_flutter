@@ -1,19 +1,33 @@
 /// Base class for video compression events
-abstract class CompressionEvent { }
+abstract class CompressionEvent { 
+  /// Public initializer
+  const CompressionEvent({ this.custom });
+
+  /// Optional custom field
+  final dynamic custom;
+}
 
 /// Video compression started event
 class CompressionStartedEvent implements CompressionEvent { 
   /// Constant contructor
-  const CompressionStartedEvent();
+  const CompressionStartedEvent({ this.custom });
+
+  /// Optional custom field
+  @override 
+  final dynamic custom;
 }
 
 /// Event for progress in video compression 
 class CompressionProgressEvent implements CompressionEvent { 
   /// Public initializer
-  const CompressionProgressEvent({ required this.progress });
+  const CompressionProgressEvent({ required this.progress, this.custom });
 
   /// Compression progress, [0.0, 1.0]
   final double progress;
+
+  /// Optional custom field
+  @override 
+  final dynamic custom;
 
   @override
   String toString() => '${super.toString()}, Progress: ${(progress * 100).toInt()}%';
@@ -31,10 +45,14 @@ class CompressionProgressEvent implements CompressionEvent {
 /// Video compression completed event
 class CompressionCompletedEvent implements CompressionEvent { 
   /// Public initializer
-  const CompressionCompletedEvent({ required this.url });
+  const CompressionCompletedEvent({ required this.url, this.custom });
 
   /// An url for output video file
   final String url;
+
+  /// Optional custom field
+  @override 
+  final dynamic custom;
 
   @override
   String toString() => '${super.toString()}, URL: $url';
@@ -52,16 +70,24 @@ class CompressionCompletedEvent implements CompressionEvent {
 /// Video compression cancelled event
 class CompressionCancelledEvent implements CompressionEvent { 
   /// Constant contructor
-  const CompressionCancelledEvent();
+  const CompressionCancelledEvent({ this.custom });
+
+  /// Optional custom field
+  @override 
+  final dynamic custom;
 }
 
 /// Video compression failed event
 class CompressionFailedEvent implements CompressionEvent {
   /// Public initializer
-  const CompressionFailedEvent({ required this.error });
+  const CompressionFailedEvent({ required this.error, this.custom });
 
   /// An error in video compression process
   final String error;
+
+  /// Optional custom field
+  @override 
+  final dynamic custom;
 
   @override
   String toString() => '${super.toString()}, Error: $error';
