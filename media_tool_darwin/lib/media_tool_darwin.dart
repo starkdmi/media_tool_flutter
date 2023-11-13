@@ -13,6 +13,16 @@ class MediaToolDarwin extends MediaToolPlatform {
     MediaToolPlatform.instance = MediaToolDarwin();
   }
 
+  /// Compress video file
+  /// [id] - Unique process ID
+  /// [path] - Path location of input video file
+  /// [destination] - Path location of output video file
+  /// [videoSettings] - Video settings: codec, bitrate, quality, resolution
+  /// [skipAudio] - If `true` then audio is skipped
+  /// [audioSettings] - Audio settings: codec, bitrate, sampleRate
+  /// [skipMetadata] - Flag to skip source video metadata
+  /// [overwrite] - Should overwrite exisiting file at destination
+  /// [deleteOrigin] - Should input video file be deleted on succeed compression
   @override
   Stream<CompressionEvent> startVideoCompression({
     required String id,
@@ -21,6 +31,7 @@ class MediaToolDarwin extends MediaToolPlatform {
     VideoSettings videoSettings = const VideoSettings(),
     bool skipAudio = false,
     AudioSettings audioSettings = const AudioSettings(),
+    bool skipMetadata = false,
     bool overwrite = false,
     bool deleteOrigin = false,
   }) async* {
@@ -33,6 +44,7 @@ class MediaToolDarwin extends MediaToolPlatform {
         'video': videoSettings.toJson(),
         'skipAudio': skipAudio,
         'audio': skipAudio ? null : audioSettings.toJson(),
+        'skipMetadata': skipMetadata,
         'overwrite': overwrite,
         'deleteOrigin': deleteOrigin,
       }); // nil
@@ -65,12 +77,21 @@ class MediaToolDarwin extends MediaToolPlatform {
     }
   }
 
+  /// Compress audio file
+  /// [id] - Unique process ID
+  /// [path] - Path location of input video file
+  /// [destination] - Path location of output video file
+  /// [settings] - Audio settings: codec, bitrate, sampleRate
+  /// [skipMetadata] - Flag to skip source file metadata
+  /// [overwrite] - Should overwrite exisiting file at destination
+  /// [deleteOrigin] - Should input audio file be deleted on succeed compression
   @override
   Stream<CompressionEvent> startAudioCompression({
     required String id,
     required String path,
     required String destination,
     AudioSettings settings = const AudioSettings(),
+    bool skipMetadata = false,
     bool overwrite = false,
     bool deleteOrigin = false,
   }) async* {
@@ -81,6 +102,7 @@ class MediaToolDarwin extends MediaToolPlatform {
         'path': path,
         'destination': destination,
         'audio': settings.toJson(),
+        'skipMetadata': skipMetadata,
         'overwrite': overwrite,
         'deleteOrigin': deleteOrigin,
       }); // nil
@@ -113,6 +135,7 @@ class MediaToolDarwin extends MediaToolPlatform {
     }
   }
 
+  /// Cancel current compression process
   @override
   Future<bool> cancelCompression(String id) async {
     // Cancel video compression process
@@ -123,6 +146,7 @@ class MediaToolDarwin extends MediaToolPlatform {
   /// [path] - Path location of input video file
   /// [destination] - Path location of output video file
   /// [settings] - Image settings: format, quality, size
+  /// [skipMetadata] - Flag to skip source file metadata
   /// [overwrite] - Should overwrite exisiting file at destination
   /// [deleteOrigin] - Should input image file be deleted on succeed compression
   @override
@@ -130,6 +154,7 @@ class MediaToolDarwin extends MediaToolPlatform {
     required String path,
     required String destination,
     ImageSettings settings = const ImageSettings(),
+    bool skipMetadata = false,
     bool overwrite = false,
     bool deleteOrigin = false,
   }) async {
@@ -138,6 +163,7 @@ class MediaToolDarwin extends MediaToolPlatform {
       'path': path,
       'destination': destination,
       'settings': settings.toJson(),
+      'skipMetadata': skipMetadata,
       'overwrite': overwrite,
       'deleteOrigin': deleteOrigin,
     });

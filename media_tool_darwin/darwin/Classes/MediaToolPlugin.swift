@@ -66,6 +66,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             let path = arguments["path"] as? String,
             let destination = arguments["destination"] as? String,
             let skipAudio = arguments["skipAudio"] as? Bool,
+            let skipMetadata = arguments["skipMetadata"] as? Bool,
             let overwrite = arguments["overwrite"] as? Bool,
             let deleteOrigin = arguments["deleteOrigin"] as? Bool
         else {
@@ -121,6 +122,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                 videoSettings: videoSettings,
                 skipAudio: skipAudio,
                 audioSettings: audioSettings,
+                skipSourceMetadata: skipMetadata,
                 overwrite: overwrite,
                 deleteSourceFile: deleteOrigin,
                 callback: { state in
@@ -164,6 +166,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         guard
             let path = arguments["path"] as? String,
             let destination = arguments["destination"] as? String,
+            let skipMetadata = arguments["skipMetadata"] as? Bool,
             let overwrite = arguments["overwrite"] as? Bool,
             let deleteOrigin = arguments["deleteOrigin"] as? Bool
         else {
@@ -203,6 +206,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                 destination: destinationUrl,
                 fileType: fileType,
                 settings: settings,
+                skipSourceMetadata: skipMetadata,
                 overwrite: overwrite,
                 deleteSourceFile: deleteOrigin,
                 callback: { state in
@@ -259,6 +263,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         guard
             let path = arguments["path"] as? String,
             let destination = arguments["destination"] as? String,
+            let skipMetadata = arguments["skipMetadata"] as? Bool,
             let overwrite = arguments["overwrite"] as? Bool,
             let deleteOrigin = arguments["deleteOrigin"] as? Bool
         else {
@@ -285,7 +290,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                     source: sourceUrl,
                     destination: destinationUrl,
                     settings: settings,
-                    skipMetadata: false,
+                    skipMetadata: skipMetadata,
                     overwrite: overwrite,
                     deleteSourceFile: deleteOrigin
                 )

@@ -17,6 +17,7 @@ class MethodChannelMediaTool extends MediaToolPlatform {
     VideoSettings videoSettings = const VideoSettings(),
     bool skipAudio = false,
     AudioSettings audioSettings = const AudioSettings(),
+    bool skipMetadata = false,
     bool overwrite = false,
     bool deleteOrigin = false,
   }) async* {
@@ -29,6 +30,7 @@ class MethodChannelMediaTool extends MediaToolPlatform {
     required String path,
     required String destination,
     AudioSettings settings = const AudioSettings(),
+    bool skipMetadata = false,
     bool overwrite = false,
     bool deleteOrigin = false,
   }) async* {
@@ -45,6 +47,7 @@ class MethodChannelMediaTool extends MediaToolPlatform {
     required String path,
     required String destination,
     ImageSettings settings = const ImageSettings(),
+    bool skipMetadata = false,
     bool overwrite = false,
     bool deleteOrigin = false,
   }) async {

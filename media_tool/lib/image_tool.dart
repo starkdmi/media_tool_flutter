@@ -7,6 +7,7 @@ class ImageTool {
     required String path,
     required String destination,
     ImageSettings settings = const ImageSettings(),
+    bool skipMetadata = false,
     bool overwrite = false,
     bool deleteOrigin = false,
   }) async {
@@ -14,6 +15,7 @@ class ImageTool {
       path: path,
       destination: destination,
       settings: settings,
+      skipMetadata: skipMetadata,
       overwrite: overwrite,
       deleteOrigin: deleteOrigin,
     );

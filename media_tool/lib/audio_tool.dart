@@ -8,6 +8,7 @@ class AudioTool {
     required String path,
     required String destination,
     AudioSettings settings = const AudioSettings(),
+    bool skipMetadata = false,
     bool overwrite = false,
     bool deleteOrigin = false,
   }) {
@@ -16,6 +17,7 @@ class AudioTool {
       path: path,
       destination: destination,
       settings: settings,
+      skipMetadata: skipMetadata,
       overwrite: overwrite,
       deleteOrigin: deleteOrigin,
     );

@@ -27,6 +27,7 @@ class VideoTool {
     VideoSettings videoSettings = const VideoSettings(),
     bool skipAudio = false,
     AudioSettings audioSettings = const AudioSettings(),
+    bool skipMetadata = false,
     bool overwrite = false,
     bool deleteOrigin = false,
   }) {
@@ -37,6 +38,7 @@ class VideoTool {
       videoSettings: videoSettings,
       skipAudio: skipAudio,
       audioSettings: audioSettings,
+      skipMetadata: skipMetadata,
       overwrite: overwrite,
       deleteOrigin: deleteOrigin,
     );
