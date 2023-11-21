@@ -15,9 +15,11 @@ Flutter plugin for advanced media manipulation using native platform code. Suppo
 | Platform | Framework |
 | --- | --- |
 | Apple | [MediaToolSwift](https://github.com/starkdmi/MediaToolSwift) |
-| Android | MediaCodec | 
+| Android | MediaCodec\* | 
 | Windows & Linux | OpenCL | 
 | Web| None \| [FFmpeg](https://github.com/ffmpegwasm/ffmpeg.wasm) |
+
+\* FFmpeg based [media_tool_ffmpeg](https://github.com/starkdmi/media_tool_ffmpeg) implementation is __temporarily__ used.
 
 ## Video
 
