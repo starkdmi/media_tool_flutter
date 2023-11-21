@@ -35,7 +35,7 @@ class ImageSettings {
   /// A flag to skip animation data (to use primary frame only)
   final bool skipAnimation;
 
-  /// A flag to preserve alpha channel in video
+  /// A flag to preserve alpha channel in animated image sequence
   final bool preserveAlphaChannel;
 
   /// A flag used for thumbnail embeding

@@ -46,7 +46,7 @@ class ImageInfo {
   static ImageInfo? fromJson(Map<String, dynamic> data) { // ImageInfo.fromJson(Map<String, dynamic> json): ... ;
     try {
       final formatId = data['format'] as String;
-      final format = ImageFormatValue.fromId(formatId);
+      final format = ImageFormat.fromId(formatId);
 
       final width = data['width'] as num;
       final height = data['height'] as num;

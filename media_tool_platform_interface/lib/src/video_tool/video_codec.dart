@@ -7,13 +7,10 @@ enum VideoCodec {
   h265,
 
   /// ProRes 4444, not all devices are supported
-  prores
+  prores;
 
   // muxa, jpeg, apcn, apch, apcs, apco
-}
 
-/// Video codec extension
-extension VideoCodecValue on VideoCodec {
   /// Codec identifier
   String get id {
     switch (this) {

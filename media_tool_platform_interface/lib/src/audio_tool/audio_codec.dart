@@ -7,11 +7,8 @@ enum AudioCodec {
   opus,
 
   /// FLAC
-  flac
-}
+  flac;
 
-/// Audio codec extension
-extension AudioCodecValue on AudioCodec {
   /// Audio codec id
   int get id {
     switch (this) {

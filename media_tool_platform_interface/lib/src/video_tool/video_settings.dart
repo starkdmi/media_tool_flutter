@@ -17,7 +17,7 @@ class VideoSettings {
   /// Video codec
   final VideoCodec? codec;
 
-  /// Video bitrate
+  /// Video bitrate in bytes
   final int? bitrate;
 
   /// Video quality, in range `[0.0, 1.0]`, ignored when `bitrate` is set

@@ -1,7 +1,8 @@
 /// Available image formats
 enum ImageFormat {
-  // HEIC (HEIF/HEIF10 with HEVC compression) image format
-  // heif,
+  /// HEIC (HEIF/HEIF10 with HEVC compression) image format
+  /// Warning: Only Apple platforms supported
+  heif,
 
   /// JPEG image format
   jpeg,
@@ -18,17 +19,15 @@ enum ImageFormat {
   /// Bitmap image format
   bmp,
 
-  // WebP image format
-  // webp,
-}
+  /// WebP image format
+  /// Warning: Not supported on Apple platforms
+  webp;
 
-/// Image format extension
-extension ImageFormatValue on ImageFormat {
   /// Format identifier
   String get id {
     switch (this) {
-    // case ImageFormat.heif:
-    //   return 'heif';
+    case ImageFormat.heif:
+      return 'heif';
     case ImageFormat.jpeg:
       return 'jpeg';
     case ImageFormat.png:
@@ -39,8 +38,8 @@ extension ImageFormatValue on ImageFormat {
       return 'tiff';
     case ImageFormat.bmp:
       return 'bmp';
-    // case ImageFormat.webp:
-    //   return 'webp';
+    case ImageFormat.webp:
+      return 'webp';
     }
   }
 
