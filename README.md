@@ -4,55 +4,150 @@
 
 ## 🚧 WIP 🚧
 
-Only Apple (iOS & macOS) support is implemented yet.
+Only Apple (iOS & macOS) support is implemented via native code yet. The Android implementation is mocked using `FFmpeg`.
 
 ## About
 
-Flutter plugin allows advanced media manipulation using native platform code. Media types and operations:
-- **Video**: compress/convert, resize, crop, trim, rotate, frame rate, apply filters, video stabilization, audio track manipulataion, metadata processing, thumbnail, animated video previews, video information
+Flutter plugin for advanced media manipulation using native platform code. Supported media types are `video`, `audio` and `image`.
 
-- **Image**: convert, resize, crop, rotate, flip, remove background, apply filters, adjust frame rate, thumbnail, image information
+## Native Frameworks
 
-- **Audio**: convert, cut, adjust speed, generate waveworm data, audio information
+| Platform | Framework |
+| --- | --- |
+| Apple | [MediaToolSwift](https://github.com/starkdmi/MediaToolSwift) |
+| Android | MediaCodec | 
+| Windows & Linux | OpenCL | 
+| Web| None \| [FFmpeg](https://github.com/ffmpegwasm/ffmpeg.wasm) |
 
 ## Video
 
-### Native Frameworks
+### Features:
+- Compress with multiple codecs
+- Resize
+- Frame rate adjustment
+- Audio track manipulataion
+- Alpha channel and HDR handling
+- Slow motion support
+- Metadata preserving
+- Hardware acceleration
+- Thumbnails extraction
+- Video information gathering
+- Progress and cancellation
 
-- **Apple**: _VideoToolBox_ via [MediaToolSwift](https://github.com/starkdmi/MediaToolSwift)
+### Codecs
 
-- **Android**: _MediaCodec_ via [Transcoder](https://github.com/natario1/Transcoder) or [LightCompressor](https://github.com/AbedElazizShe/LightCompressor)
+__Video__: `H.264`, `H.265/HEVC` and `ProRes`.
 
-- **Windows and Linux**: _OpenCL_
-
-- **Web**:  _None_ **or** _[FFmpeg](https://github.com/ffmpegwasm/ffmpeg.wasm)_ - [Dart only](https://docs.flutter.dev/development/packages-and-plugins/developing-packages#dart-only-platform-implementations) using [ffmpeg_wasm](https://pub.dev/packages/ffmpeg_wasm)
+__Audio__: `AAC`, `Opus` and `FLAC`.
 
 ### Example
 
 ```Dart
 // Compress video file
 final task = VideoTool.compress(
-  id: id,
+  id: id, // unique id
   path: path,
   destination: destination,
+  // Video
   videoSettings: const VideoSettings(
     codec: VideoCodec.h264,
-    bitrate: 2000000,
-    size: Size(1280.0, 1280.0),
+    bitrate: 2000000, // 2 Mbps
+    size: Size(1280.0, 1280.0), // size to fit in
+    // quality, frame rate, atd.
   ),
+  // Audio
   skipAudio: false,
   audioSettings: const AudioSettings(
     codec: AudioCodec.opus, 
-    bitrate: 96000, 
+    bitrate: 96000, // 96 Kbps
+    // sample rate, quality, atd.
   ),
+  // Metadata and file options
+  skipMetadata: false,
   overwrite: true,
   deleteOrigin: false
 );
 
 // State notifier
-task.events.listen((event) { 
-  print(event)
-});
+task.events.listen(print);
+
+// Cancellation
+task.cancel();
+```
+
+## Image
+
+### Features:
+- Convert with multiple formats
+- Resize and crop
+- Frame rate adjustment
+- Animated image sequences support
+- Alpha channel and HDR handling
+- Metadata and orientation preserving
+- Image information gathering
+
+### Formats:
+- `JPEG`
+- `PNG` and `APNG`
+- `GIF`
+- `TIFF`
+- `BMP`
+- `WEBP`
+- `HEIF`
+
+### Example
+
+```Dart
+// Convert image file
+final metadata = await ImageTool.compress(
+  path: path,
+  destination: destination,
+  settings: const ImageSettings(
+    format: ImageFormat.png,
+    size: Size(1280.0, 1280.0),
+    crop: false, // crop or fit
+    // frame rate, quality, alpha channel, background color, atd.
+  ),
+  skipMetadata: false,
+  overwrite: true,
+  deleteOrigin: false
+);
+```
+
+## Audio
+
+### Features:
+- Compress with multiple codecs
+- Metadata preserving
+- Hardware acceleration
+- Audio information gathering
+- Progress and cancellation
+
+### Codecs:
+- `AAC`
+- `Opus`
+- `FLAC`
+
+### Example
+
+```Dart
+// Compress audio file
+final task = AudioTool.compress(
+  id: id, // unique id
+  path: path,
+  destination: destination,
+  settings: const AudioSettings(
+    codec: AudioCodec.opus, 
+    bitrate: 96000, // 96 Kbps
+    // sample rate, quality, atd.
+  ),
+  skipMetadata: false,
+  overwrite: true,
+  deleteOrigin: false
+);
+
+// State notifier
+task.events.listen(print);
 
 // Cancellation
 task.cancel();
@@ -66,3 +161,4 @@ Each plugin methods which run platform code do support multiple parallel executi
 
 The Plugin is licensed under the MIT. The platform implementations may have their own licenses:
 - MediaToolSwift - Mozilla Public License 2.0
+- media_tool_ffmpeg - LGPL V2.1
