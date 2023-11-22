@@ -2,7 +2,7 @@ name: media_tool_platform_interface
 description: A common platform interface for the media_tool_flutter plugin.
 homepage: https://github.com/starkdmi/media_tool_flutter
 repository: https://github.com/starkdmi/media_tool_flutter/tree/main/media_tool_platform_interface
-version: 0.1.1
+version: 0.1.2
 
 environment:
   sdk: ">=2.18.0 <4.0.0"
