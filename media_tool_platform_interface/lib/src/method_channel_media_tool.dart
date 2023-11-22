@@ -7,7 +7,7 @@ import 'package:media_tool_platform_interface/media_tool_platform_interface.dart
 class MethodChannelMediaTool extends MediaToolPlatform {
   /// The method channel used to interact with the native platform
   @visibleForTesting
-  final methodChannel = const MethodChannel('media_tool');
+  final methodChannel = const MethodChannel('media_tool_flutter');
 
   @override
   Stream<CompressionEvent> startVideoCompression({
