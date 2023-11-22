@@ -1,6 +1,6 @@
 # media_tool_darwin
 
-The Darwin (iOS and OSX) implementation of `media_tool`.
+The Darwin (iOS and OSX) implementation of [media_tool](https://github.com/starkdmi/media_tool_flutter).
 
 ## Usage
 

@@ -24,6 +24,10 @@ void main() {
             return null;
           case 'cancelCompression':
             return null;
+          case 'imageCompression':
+            return null;
+          case 'videoThumbnails':
+            return null;
           default:
             return null;
         }

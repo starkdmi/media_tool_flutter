@@ -50,7 +50,7 @@ class MediaToolDarwin extends MediaToolPlatform {
       }); // nil
 
       final stream = EventChannel('media_tool.video_compression.$id')
-        .receiveBroadcastStream();
+          .receiveBroadcastStream();
 
       // Map events from native platform into Dart based events
       await for (final event in stream) {
@@ -108,7 +108,7 @@ class MediaToolDarwin extends MediaToolPlatform {
       }); // nil
 
       final stream = EventChannel('media_tool.audio_compression.$id')
-        .receiveBroadcastStream();
+          .receiveBroadcastStream();
 
       // Map events from native platform into Dart based events
       await for (final event in stream) {
@@ -139,7 +139,9 @@ class MediaToolDarwin extends MediaToolPlatform {
   @override
   Future<bool> cancelCompression(String id) async {
     // Cancel video compression process
-    return await methodChannel.invokeMethod<bool>('cancelCompression', { 'id': id }) ?? false;
+    return await methodChannel
+            .invokeMethod<bool>('cancelCompression', {'id': id}) ??
+        false;
   }
 
   /// Convert image file
@@ -159,7 +161,8 @@ class MediaToolDarwin extends MediaToolPlatform {
     bool deleteOrigin = false,
   }) async {
     // Run the image compression
-    final data = await methodChannel.invokeMethod<Map<Object?, Object?>>('imageCompression', {
+    final data = await methodChannel
+        .invokeMethod<Map<Object?, Object?>>('imageCompression', {
       'path': path,
       'destination': destination,
       'settings': settings.toJson(),
@@ -170,7 +173,8 @@ class MediaToolDarwin extends MediaToolPlatform {
 
     // Convert dict key from `Object?` to `String`
     final dict = data?.map((key, value) {
-      return MapEntry<String, Object?>(key is String ? key : key.toString(), value);
+      return MapEntry<String, Object?>(
+          key is String ? key : key.toString(), value);
     });
 
     return dict == null ? null : ImageInfo.fromJson(dict);
@@ -193,7 +197,8 @@ class MediaToolDarwin extends MediaToolPlatform {
     double? timeToleranceAfter,
   }) async {
     // Execute thumbnail generation
-    final entries = await methodChannel.invokeMethod<List<Object?>>('videoThumbnails', {
+    final entries =
+        await methodChannel.invokeMethod<List<Object?>>('videoThumbnails', {
       'path': path,
       'requests': requests.map((r) => r.toJson()).toList(),
       'settings': settings.toJson(),
@@ -203,17 +208,20 @@ class MediaToolDarwin extends MediaToolPlatform {
     });
 
     // Process list of JSON objects
-    return entries?.map((entry) {
-      if (entry == null) return null;
+    return entries
+            ?.map((entry) {
+              if (entry == null) return null;
 
-      // Convert Object? to Map<String, Object?>
-      final data = Map<String, Object?>.from(entry as Map<dynamic, dynamic>);
+              // Convert Object? to Map<String, Object?>
+              final data =
+                  Map<String, Object?>.from(entry as Map<dynamic, dynamic>);
 
-      // Serialize thumbnail file object
-      return VideoThumbnail.fromJson(data);
-    })
-    // Skip empty results
-    .whereType<VideoThumbnail>()
-    .toList() ?? [];
+              // Serialize thumbnail file object
+              return VideoThumbnail.fromJson(data);
+            })
+            // Skip empty results
+            .whereType<VideoThumbnail>()
+            .toList() ??
+        [];
   }
 }
