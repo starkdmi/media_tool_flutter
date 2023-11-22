@@ -1,9 +1,9 @@
 part of 'media_tool.dart';
 
-/// Video compression task 
+/// Video compression task
 class VideoCompressionTask {
   /// Constant constructor
-  const VideoCompressionTask({ required this.id, required this.events });
+  const VideoCompressionTask({required this.id, required this.events});
 
   /// Unique process ID
   final String id;
