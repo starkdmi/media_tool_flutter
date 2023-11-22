@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:media_tool/media_tool.dart';
+import 'package:media_tool_flutter/media_tool_flutter.dart';
 import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
 // import 'package:path_provider/path_provider.dart';
 
