@@ -88,10 +88,18 @@ class _HomePageState extends State<HomePage> {
                 );
 
                 _subscription = task.events.listen((event) {
-                  setState(() => _event = event);
-                });
+                  debugPrint(event.toString());
 
-                setState(() => _task = task);
+                  setState(() {
+                    _event = event;
+
+                    if (event is CompressionStartedEvent) {
+                      _task = task;
+                    }
+                  });     
+                }, onDone: () {
+                  setState(() => _task = null);
+                },);
               },
               child: const Text('Select video'),
             ),
