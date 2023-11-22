@@ -6,7 +6,7 @@ export 'package:media_tool_platform_interface/src/audio_tool/audio_tool.dart';
 export 'package:media_tool_platform_interface/src/image_tool/image_tool.dart';
 export 'package:media_tool_platform_interface/src/video_tool/video_tool.dart';
 
-/// The interface that implementations of media_tool must implement
+/// The interface that implementations of media_tool_flutter must implement
 ///
 /// Platform implementations should extend this class
 /// rather than implement it as `MediaTool`

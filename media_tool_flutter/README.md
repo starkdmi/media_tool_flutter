@@ -157,7 +157,7 @@ task.cancel();
 
 ## Internally
 
-Each plugin methods which run platform code do support multiple parallel executions, each of execution has it's own progress, cancellation and error handling. Main tests stored at [integration_test](media_tool/example/integration_test/).
+Each plugin methods which run platform code do support multiple parallel executions, each of execution has it's own progress, cancellation and error handling. Main tests stored at [integration_test](media_tool_flutter/example/integration_test/).
 
 ## License
 

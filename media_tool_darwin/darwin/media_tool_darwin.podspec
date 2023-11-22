@@ -4,9 +4,9 @@
 Pod::Spec.new do |s|
   s.name             = 'media_tool_darwin'
   s.version          = '0.0.1'
-  s.summary          = 'A Darwin implementation of the media_tool plugin.'
+  s.summary          = 'A Darwin implementation of the media_tool_flutter plugin.'
   s.description      = <<-DESC
-  A Darwin implementation of the media_tool plugin.
+  A Darwin implementation of the media_tool_flutter plugin.
                        DESC
   s.homepage         = 'https://github.com/starkdmi/media_tool_flutter'
   s.license          = { :type => 'GPLv3', :file => '../LICENSE' }

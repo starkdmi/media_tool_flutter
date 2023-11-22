@@ -22,7 +22,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         #endif
 
         let channel = FlutterMethodChannel(
-            name: "media_tool",
+            name: "media_tool_flutter",
             binaryMessenger: Self.messenger!
         )
         let instance = MediaToolPlugin()
@@ -107,7 +107,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         }
 
         // Intialize the event channel
-        let stream = QueuedStreamHandler(name: "media_tool.video_compression.\(uid)", messenger: Self.messenger!)
+        let stream = QueuedStreamHandler(name: "media_tool_flutter.video_compression.\(uid)", messenger: Self.messenger!)
 
         // Event channel is ready
         result(nil)
@@ -193,7 +193,7 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
         }
 
         // Intialize the event channel
-        let stream = QueuedStreamHandler(name: "media_tool.audio_compression.\(uid)", messenger: Self.messenger!)
+        let stream = QueuedStreamHandler(name: "media_tool_flutter.audio_compression.\(uid)", messenger: Self.messenger!)
 
         // Event channel is ready
         result(nil)

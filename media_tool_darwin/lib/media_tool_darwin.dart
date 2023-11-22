@@ -6,7 +6,7 @@ import 'package:media_tool_platform_interface/media_tool_platform_interface.dart
 class MediaToolDarwin extends MediaToolPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('media_tool');
+  final methodChannel = const MethodChannel('media_tool_flutter');
 
   /// Registers this class as the default instance of [MediaToolPlatform]
   static void registerWith() {
@@ -49,7 +49,7 @@ class MediaToolDarwin extends MediaToolPlatform {
         'deleteOrigin': deleteOrigin,
       }); // nil
 
-      final stream = EventChannel('media_tool.video_compression.$id')
+      final stream = EventChannel('media_tool_flutter.video_compression.$id')
           .receiveBroadcastStream();
 
       // Map events from native platform into Dart based events
@@ -107,7 +107,7 @@ class MediaToolDarwin extends MediaToolPlatform {
         'deleteOrigin': deleteOrigin,
       }); // nil
 
-      final stream = EventChannel('media_tool.audio_compression.$id')
+      final stream = EventChannel('media_tool_flutter.audio_compression.$id')
           .receiveBroadcastStream();
 
       // Map events from native platform into Dart based events
