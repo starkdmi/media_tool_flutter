@@ -21,16 +21,16 @@ extension AudioQualityValue on AudioQuality {
   /// Corresponding integer value
   int get value {
     switch (this) {
-    case AudioQuality.min:
-      return 0;
-    case AudioQuality.low:
-      return 32;
-    case AudioQuality.medium:
-      return 64;
-    case AudioQuality.high:
-      return 96;
-    case AudioQuality.max:
-      return 127;
+      case AudioQuality.min:
+        return 0;
+      case AudioQuality.low:
+        return 32;
+      case AudioQuality.medium:
+        return 64;
+      case AudioQuality.high:
+        return 96;
+      case AudioQuality.max:
+        return 127;
     }
   }
 }

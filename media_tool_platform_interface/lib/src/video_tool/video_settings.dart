@@ -4,7 +4,7 @@ import 'package:media_tool_platform_interface/src/video_tool/video_codec.dart';
 /// Video settings
 class VideoSettings {
   /// Public initializer
-  const VideoSettings({ 
+  const VideoSettings({
     this.codec,
     this.bitrate,
     this.quality,
@@ -37,13 +37,13 @@ class VideoSettings {
 
   /// Serialize to JSON
   Map<String, dynamic> toJson() => {
-    'codec': codec?.id,
-    'bitrate': bitrate,
-    'quality': quality,
-    'width': size?.width,
-    'height': size?.height,
-    'frameRate': frameRate,
-    'keepAlpha': preserveAlphaChannel,
-    'hardwareAcceleration': !disableHardwareAcceleration,
-  };
+        'codec': codec?.id,
+        'bitrate': bitrate,
+        'quality': quality,
+        'width': size?.width,
+        'height': size?.height,
+        'frameRate': frameRate,
+        'keepAlpha': preserveAlphaChannel,
+        'hardwareAcceleration': !disableHardwareAcceleration,
+      };
 }

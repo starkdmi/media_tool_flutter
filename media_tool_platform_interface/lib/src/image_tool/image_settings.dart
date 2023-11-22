@@ -4,7 +4,7 @@ import 'package:media_tool_platform_interface/src/image_tool/image_format.dart';
 /// Image settings
 class ImageSettings {
   /// Public initializer
-  const ImageSettings({ 
+  const ImageSettings({
     this.format,
     this.quality,
     this.size,
@@ -50,16 +50,16 @@ class ImageSettings {
 
   /// Serialize to JSON
   Map<String, dynamic> toJson() => {
-    'format': format?.id,
-    'quality': quality,
-    'width': size?.width,
-    'height': size?.height,
-    'crop': crop,
-    'frameRate': frameRate,
-    'skipAnimation': skipAnimation,
-    'keepAlpha': preserveAlphaChannel,
-    'embedThumbnail': embedThumbnail,
-    'optimizeColors': optimizeColors,
-    'backgroundColor': backgroundColor?.value,
-  };
+        'format': format?.id,
+        'quality': quality,
+        'width': size?.width,
+        'height': size?.height,
+        'crop': crop,
+        'frameRate': frameRate,
+        'skipAnimation': skipAnimation,
+        'keepAlpha': preserveAlphaChannel,
+        'embedThumbnail': embedThumbnail,
+        'optimizeColors': optimizeColors,
+        'backgroundColor': backgroundColor?.value,
+      };
 }

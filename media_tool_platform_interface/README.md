@@ -1,6 +1,6 @@
 # media_tool_platform_interface
 
-A common platform interface for the `media_tool` plugin.
+A common platform interface for the [media_tool](https://github.com/starkdmi/media_tool_flutter) plugin.
 
 This interface allows platform-specific implementations of the `media_tool` plugin, as well as the plugin itself, to ensure they are supporting the same interface.
 

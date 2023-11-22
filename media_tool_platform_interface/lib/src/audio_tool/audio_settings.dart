@@ -4,7 +4,7 @@ import 'package:media_tool_platform_interface/src/audio_tool/audio_quality.dart'
 /// Audio settings
 class AudioSettings {
   /// Public initializer
-  const AudioSettings({ 
+  const AudioSettings({
     this.codec,
     this.bitrate,
     this.sampleRate,
@@ -25,9 +25,9 @@ class AudioSettings {
 
   /// Serialize to JSON
   Map<String, dynamic> toJson() => {
-    'codec': codec?.id,
-    'bitrate': bitrate,
-    'sampleRate': sampleRate,
-    'quality': quality?.value,
-  };
+        'codec': codec?.id,
+        'bitrate': bitrate,
+        'sampleRate': sampleRate,
+        'quality': quality?.value,
+      };
 }

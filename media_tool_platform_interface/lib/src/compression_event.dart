@@ -1,41 +1,42 @@
 /// Base class for video compression events
-abstract class CompressionEvent { 
+abstract class CompressionEvent {
   /// Public initializer
-  const CompressionEvent({ this.custom });
+  const CompressionEvent({this.custom});
 
   /// Optional custom field
   final dynamic custom;
 }
 
 /// Video compression started event
-class CompressionStartedEvent implements CompressionEvent { 
+class CompressionStartedEvent implements CompressionEvent {
   /// Constant contructor
-  const CompressionStartedEvent({ this.custom });
+  const CompressionStartedEvent({this.custom});
 
   /// Optional custom field
-  @override 
+  @override
   final dynamic custom;
 }
 
-/// Event for progress in video compression 
-class CompressionProgressEvent implements CompressionEvent { 
+/// Event for progress in video compression
+class CompressionProgressEvent implements CompressionEvent {
   /// Public initializer
-  const CompressionProgressEvent({ required this.progress, this.custom });
+  const CompressionProgressEvent({required this.progress, this.custom});
 
   /// Compression progress, [0.0, 1.0]
   final double progress;
 
   /// Optional custom field
-  @override 
+  @override
   final dynamic custom;
 
   @override
-  String toString() => '${super.toString()}, Progress: ${(progress * 100).toInt()}%';
+  String toString() =>
+      '${super.toString()}, Progress: ${(progress * 100).toInt()}%';
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) || 
-      other is CompressionProgressEvent && other.progress == progress;
+    return identical(this, other) ||
+        other is CompressionProgressEvent && other.progress == progress;
   }
 
   @override
@@ -43,15 +44,15 @@ class CompressionProgressEvent implements CompressionEvent {
 }
 
 /// Video compression completed event
-class CompressionCompletedEvent implements CompressionEvent { 
+class CompressionCompletedEvent implements CompressionEvent {
   /// Public initializer
-  const CompressionCompletedEvent({ required this.url, this.custom });
+  const CompressionCompletedEvent({required this.url, this.custom});
 
   /// An url for output video file
   final String url;
 
   /// Optional custom field
-  @override 
+  @override
   final dynamic custom;
 
   @override
@@ -59,8 +60,8 @@ class CompressionCompletedEvent implements CompressionEvent {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) || 
-      other is CompressionCompletedEvent && other.url == url;
+    return identical(this, other) ||
+        other is CompressionCompletedEvent && other.url == url;
   }
 
   @override
@@ -68,25 +69,25 @@ class CompressionCompletedEvent implements CompressionEvent {
 }
 
 /// Video compression cancelled event
-class CompressionCancelledEvent implements CompressionEvent { 
+class CompressionCancelledEvent implements CompressionEvent {
   /// Constant contructor
-  const CompressionCancelledEvent({ this.custom });
+  const CompressionCancelledEvent({this.custom});
 
   /// Optional custom field
-  @override 
+  @override
   final dynamic custom;
 }
 
 /// Video compression failed event
 class CompressionFailedEvent implements CompressionEvent {
   /// Public initializer
-  const CompressionFailedEvent({ required this.error, this.custom });
+  const CompressionFailedEvent({required this.error, this.custom});
 
   /// An error in video compression process
   final String error;
 
   /// Optional custom field
-  @override 
+  @override
   final dynamic custom;
 
   @override
@@ -94,8 +95,8 @@ class CompressionFailedEvent implements CompressionEvent {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) || 
-      other is CompressionFailedEvent && other.error == error;
+    return identical(this, other) ||
+        other is CompressionFailedEvent && other.error == error;
   }
 
   @override

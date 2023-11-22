@@ -21,7 +21,8 @@ class MethodChannelMediaTool extends MediaToolPlatform {
     bool overwrite = false,
     bool deleteOrigin = false,
   }) async* {
-    throw UnimplementedError('startVideoCompression() has not been implemented.');
+    throw UnimplementedError(
+        'startVideoCompression() has not been implemented.');
   }
 
   @override
@@ -34,7 +35,8 @@ class MethodChannelMediaTool extends MediaToolPlatform {
     bool overwrite = false,
     bool deleteOrigin = false,
   }) async* {
-    throw UnimplementedError('startAudioCompression() has not been implemented.');
+    throw UnimplementedError(
+        'startAudioCompression() has not been implemented.');
   }
 
   @override

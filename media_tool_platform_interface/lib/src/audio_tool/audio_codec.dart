@@ -12,12 +12,12 @@ enum AudioCodec {
   /// Audio codec id
   int get id {
     switch (this) {
-    case AudioCodec.aac:
-      return 1;
-    case AudioCodec.opus:
-      return 2;
-    case AudioCodec.flac:
-      return 3;
+      case AudioCodec.aac:
+        return 1;
+      case AudioCodec.opus:
+        return 2;
+      case AudioCodec.flac:
+        return 3;
     }
   }
 }

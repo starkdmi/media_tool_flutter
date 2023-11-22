@@ -14,12 +14,12 @@ enum VideoCodec {
   /// Codec identifier
   String get id {
     switch (this) {
-    case VideoCodec.h264:
-      return 'avc1';
-    case VideoCodec.h265:
-      return 'hvc1';
-    case VideoCodec.prores:
-      return 'ap4h';
+      case VideoCodec.h264:
+        return 'avc1';
+      case VideoCodec.h265:
+        return 'hvc1';
+      case VideoCodec.prores:
+        return 'ap4h';
     }
   }
 }
