@@ -13,7 +13,7 @@ void main() {
 
     group('VideoTool', () {
       test('compress single', () async {
-        final file = File('$directory/media/oludeniz.MOV');
+        final file = File('${directory}media/oludeniz.MOV');
         final path = await copyToTmp(file, 'oludeniz.MOV');
         final destination = '${directory}temp/oludeniz_compressed.mov';
     
@@ -71,10 +71,14 @@ void main() {
         final file = File('$directory/media/bigbuckbunny.mp4'); // oludeniz.MOV
         final path = await copyToTmp(file, 'bigbuckbunny.mp4');
         final destination = '${directory}temp/thumbnails';
+        // final temp = await getTemporaryDirectory();
+        // final appDir = await getApplicationDocumentsDirectory();
 
         final thumbnails = await VideoTool.videoThumbnails(
           path: path,
           requests: [
+            // VideoThumbnailItem(time: 0.5, path: '/Users/starkdmi/Downloads/thumb_0_5.png'),
+            // VideoThumbnailItem(time: 1.0, path: '/tmp/media_tool_test/thumb_1_0.png'),
             VideoThumbnailItem(time: 1.5, path: '$destination/thumb_1_5.png'),
           ],
           settings: const ImageSettings(
