@@ -1,4 +1,4 @@
-part of 'media_tool.dart';
+part of 'media_tool_flutter.dart';
 
 /// Image manipulation
 class ImageTool {
