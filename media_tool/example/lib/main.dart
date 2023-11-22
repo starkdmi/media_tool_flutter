@@ -79,19 +79,16 @@ class _HomePageState extends State<HomePage> {
                     size: Size(1280.0, 1280.0),
                   ),
                   skipAudio: true,
-                  // audioSettings: const AudioSettings(codec: AudioCodec.opus, bitrate: 96000, sampleRate: 44100),
+                  /*audioSettings: const AudioSettings(
+                    codec: AudioCodec.opus,
+                    bitrate: 96000,
+                    sampleRate: 44100,
+                  ),*/
                   overwrite: true,
                 );
 
                 _subscription = task.events.listen((event) { 
                   setState(() => _event = event);
-
-                  //   ScaffoldMessenger.of(context).showSnackBar(
-                  //     SnackBar(
-                  //       backgroundColor: Theme.of(context).primaryColor,
-                  //       content: Text('$error'),
-                  //     ),
-                  //   );
                 });
 
                 setState(() => _task = task);
@@ -110,31 +107,6 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: const Text('Cancel'),
               ),
-
-              /*ElevatedButton(
-                onPressed: () async {
-                  final result = await FilePicker.platform.pickFiles();
-                  final path = result?.files.first.path;
-                  if (path == null) return;
-                  debugPrint(path);
-
-                  final temp = await getTemporaryDirectory();
-                  final destination = '${temp.path}/thumbnail_1_5.png';
-                  debugPrint(destination);
-
-                  final thumbnails = await VideoTool.videoThumbnails(
-                    path: path,
-                    requests: [
-                      VideoThumbnailItem(time: 1.5, path: destination),
-                    ],
-                    settings: const ImageSettings(
-                      format: ImageFormat.png,
-                    ),
-                  );
-                  debugPrint(thumbnails.toString());
-                }, 
-                child: const Text('Thumbnail'),
-              ),*/
           ],
         ),
       ),
