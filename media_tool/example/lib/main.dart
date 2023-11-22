@@ -30,7 +30,8 @@ class _HomePageState extends State<HomePage> {
   StreamSubscription<CompressionEvent>? _subscription;
   CompressionEvent? _event;
 
-  @override void dispose() {
+  @override
+  void dispose() {
     _subscription?.cancel();
     super.dispose();
   }
@@ -51,7 +52,6 @@ class _HomePageState extends State<HomePage> {
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
             const SizedBox(height: 16),
-
             ElevatedButton(
               onPressed: () async {
                 setState(() {
@@ -69,9 +69,9 @@ class _HomePageState extends State<HomePage> {
                 debugPrint(destination);
 
                 final task = VideoTool.compress(
-                  id: _uuid.v4(), 
-                  path: path, 
-                  destination: destination, 
+                  id: _uuid.v4(),
+                  path: path,
+                  destination: destination,
                   videoSettings: const VideoSettings(
                     codec: VideoCodec.h265,
                     bitrate: 2000000,
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                   overwrite: true,
                 );
 
-                _subscription = task.events.listen((event) { 
+                _subscription = task.events.listen((event) {
                   setState(() => _event = event);
                 });
 
@@ -95,13 +95,12 @@ class _HomePageState extends State<HomePage> {
               },
               child: const Text('Select video'),
             ),
-
             if (_task != null)
               ElevatedButton(
                 onPressed: () async {
                   final cancelled = await _task?.cancel();
-                  if (cancelled != true) { 
-                    return; 
+                  if (cancelled != true) {
+                    return;
                   }
                   setState(() => _task = null);
                 },
