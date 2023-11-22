@@ -1,7 +1,7 @@
 name: media_tool_flutter
 description: Crossplatform video, image and audio processing via native platform code.
 homepage: https://github.com/starkdmi/media_tool_flutter
-repository: https://github.com/starkdmi/media_tool_flutter/tree/main/media_tool
+repository: https://github.com/starkdmi/media_tool_flutter/tree/main/media_tool_flutter
 version: 0.1.0
 
 environment:

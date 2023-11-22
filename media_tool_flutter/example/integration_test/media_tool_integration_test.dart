@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:media_tool/media_tool.dart';
 import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
+// import 'package:path_provider/path_provider.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -36,9 +37,13 @@ void main() {
           overwrite: true,
           // deleteOrigin: true,
         );
+        /*await for (final event in task.events) {
+          print(event);
+        }*/
         expect(task.events, emitsThrough(
           CompressionCompletedEvent(url: destination),
         ),);
+        print(destination);
       });
 
       test('progress & cancellation', () async {
@@ -68,6 +73,7 @@ void main() {
       });
 
       test('generate video thumbnails', () async {
+        // TODO: Swift fails to save files running under Flutter
         final file = File('$directory/media/bigbuckbunny.mp4'); // oludeniz.MOV
         final path = await copyToTmp(file, 'bigbuckbunny.mp4');
         final destination = '${directory}temp/thumbnails';
@@ -85,6 +91,7 @@ void main() {
             format: ImageFormat.png,
           ),
         );
+        print(destination);
         expect(thumbnails, isNotEmpty);
       });
     });
@@ -108,9 +115,13 @@ void main() {
           overwrite: true,
           // deleteOrigin: true,
         );
+        /*await for (final event in task.events) {
+          print(event);
+        }*/
         expect(task.events, emitsThrough(
           CompressionCompletedEvent(url: destination),
         ),);
+        print(destination);
       });
     });
 
@@ -139,7 +150,11 @@ void main() {
           overwrite: true,
           // deleteOrigin: true,
         );
+        print(info);
+
         expect(info?.format, equals(ImageFormat.png));
+
+        print(destination);
       });
     });
   });
@@ -147,7 +162,10 @@ void main() {
 
 /// Copy media file to custom directory at `/tmp`
 Future<String> copyToTmp(File source, String filename) async {
+  /* To resolve the issue: `The file "oludeniz.MOV" couldn’t be opened because you don’t have permission to view it.` the App Sandbox was turned off using Xcode */
   final temp = Directory('/tmp/media_tool_test');
+  // final tmp = await getTemporaryDirectory();
+  // final temp = await tmp.createTemp('media_tool_test');
   if (!temp.existsSync()) {
     await temp.create(recursive: true);
   }

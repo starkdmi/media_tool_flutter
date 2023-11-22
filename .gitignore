@@ -48,4 +48,4 @@ build/
 .settings
 
 media_tool_ffmpeg
-media_tool/example/lib/main_progress.dart
+media_tool_flutter/example/lib/main_progress.dart

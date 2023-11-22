@@ -1,5 +1,5 @@
 name: media_tool_darwin
-description: Darwin (iOS, macOS) implementation of the media_tool plugin. The MediaToolSwift library is used.
+description: Darwin (iOS, macOS) implementation of the media_tool_flutter plugin. The MediaToolSwift library is used.
 homepage: https://github.com/starkdmi/media_tool_flutter
 repository: https://github.com/starkdmi/media_tool_flutter/tree/main/media_tool_darwin
 version: 0.1.0
@@ -11,7 +11,7 @@ environment:
 
 flutter:
   plugin:
-    implements: media_tool
+    implements: media_tool_flutter
     platforms:
       ios:
         pluginClass: MediaToolPlugin

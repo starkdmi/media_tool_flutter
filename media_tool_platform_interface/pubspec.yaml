@@ -1,5 +1,5 @@
 name: media_tool_platform_interface
-description: A common platform interface for the media_tool plugin. Contains base types for media conversion and manipulation.
+description: A common platform interface for the media_tool_flutter plugin. Contains base types for media conversion and manipulation.
 homepage: https://github.com/starkdmi/media_tool_flutter
 repository: https://github.com/starkdmi/media_tool_flutter/tree/main/media_tool_platform_interface
 version: 0.1.0
