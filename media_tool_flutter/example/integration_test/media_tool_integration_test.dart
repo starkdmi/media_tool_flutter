@@ -11,13 +11,14 @@ void main() {
 
   group('MediaTool', () {
     final directory = (goldenFileComparator as LocalFileComparator).basedir.path;
+    print(MediaToolPlatform.instance.runtimeType);
 
     group('VideoTool', () {
       test('compress single', () async {
         final file = File('${directory}media/oludeniz.MOV');
         final path = await copyToTmp(file, 'oludeniz.MOV');
         final destination = '${directory}temp/oludeniz_compressed.mov';
-    
+
         final task = VideoTool.compress(
           id: '10001',
           path: path, // '$directory/media/oludeniz.MOV',
@@ -41,7 +42,7 @@ void main() {
           print(event);
         }*/
         expect(task.events, emitsThrough(
-          CompressionCompletedEvent(url: destination),
+          CompressionCompletedEvent(info: MockInfo(url: destination)),
         ),);
         print(destination);
       });
@@ -80,7 +81,7 @@ void main() {
         // final temp = await getTemporaryDirectory();
         // final appDir = await getApplicationDocumentsDirectory();
 
-        final thumbnails = await VideoTool.videoThumbnails(
+        final thumbnails = await VideoTool.thumbnails(
           path: path,
           requests: [
             // VideoThumbnailItem(time: 0.5, path: '/Users/starkdmi/Downloads/thumb_0_5.png'),
@@ -119,7 +120,7 @@ void main() {
           print(event);
         }*/
         expect(task.events, emitsThrough(
-          CompressionCompletedEvent(url: destination),
+          CompressionCompletedEvent(info: MockInfo(url: destination)),
         ),);
         print(destination);
       });
@@ -158,6 +159,16 @@ void main() {
       });
     });
   });
+}
+
+/// Mocked info
+class MockInfo implements MediaInfo {
+  /// Public initializer
+  const MockInfo({ required this.url });
+
+  /// File path
+  @override
+  final String url;
 }
 
 /// Copy media file to custom directory at `/tmp`
