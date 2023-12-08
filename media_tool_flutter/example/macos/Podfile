@@ -35,7 +35,7 @@ target 'Runner' do
     inherit! :search_paths
   end
 
-  pod 'MediaToolSwift', :path => '/Users/starkdmi/Projects/MediaToolSwift'
+  pod 'MediaToolSwift' # , :path => '/Users/starkdmi/Projects/MediaToolSwift'
 end
 
 post_install do |installer|
