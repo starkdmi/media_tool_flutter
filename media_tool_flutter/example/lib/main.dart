@@ -54,6 +54,8 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
+                debugPrint(MediaToolPlatform.instance.runtimeType.toString());
+
                 setState(() {
                   _task = null;
                   _event = null;
