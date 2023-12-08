@@ -14,3 +14,7 @@
 
 - Video and Audio compression returns Info object instead of URL
 - Separate functions to get video, audio and image info without conversion
+
+## 0.1.4
+
+- Fix `MediaToolSwift` version
