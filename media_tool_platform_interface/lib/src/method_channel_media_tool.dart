@@ -67,4 +67,19 @@ class MethodChannelMediaTool extends MediaToolPlatform {
   }) async {
     throw UnimplementedError('videoThumbnails() has not been implemented.');
   }
+
+  @override
+  Future<VideoInfo?> videoInfo({required String path}) async {
+    throw UnimplementedError('videoInfo() has not been implemented.');
+  }
+
+  @override
+  Future<AudioInfo?> audioInfo({required String path}) async {
+    throw UnimplementedError('audioInfo() has not been implemented.');
+  }
+
+  @override
+  Future<ImageInfo?> imageInfo({required String path}) async {
+    throw UnimplementedError('imageInfo() has not been implemented.');
+  }
 }

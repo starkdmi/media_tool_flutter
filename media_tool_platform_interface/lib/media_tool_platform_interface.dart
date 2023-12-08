@@ -4,6 +4,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 export 'package:media_tool_platform_interface/src/audio_tool/audio_tool.dart';
 export 'package:media_tool_platform_interface/src/image_tool/image_tool.dart';
+export 'package:media_tool_platform_interface/src/media_info.dart';
 export 'package:media_tool_platform_interface/src/video_tool/video_tool.dart';
 
 /// The interface that implementations of media_tool_flutter must implement
@@ -107,4 +108,16 @@ abstract class MediaToolPlatform extends PlatformInterface {
     double? timeToleranceBefore,
     double? timeToleranceAfter,
   });
+
+  /// Extract video info
+  /// [path] - Path location of input video file
+  Future<VideoInfo?> videoInfo({required String path});
+
+  /// Extract audio info
+  /// [path] - Path location of input audio file
+  Future<AudioInfo?> audioInfo({required String path});
+
+  /// Extract image info
+  /// [path] - Path location of input image file
+  Future<ImageInfo?> imageInfo({required String path});
 }

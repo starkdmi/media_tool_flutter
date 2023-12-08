@@ -1,4 +1,6 @@
-/// Base class for video compression events
+import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
+
+/// Base class for video/audio compression events
 abstract class CompressionEvent {
   /// Public initializer
   const CompressionEvent({this.custom});
@@ -7,7 +9,7 @@ abstract class CompressionEvent {
   final dynamic custom;
 }
 
-/// Video compression started event
+/// Video/Audio compression started event
 class CompressionStartedEvent implements CompressionEvent {
   /// Constant contructor
   const CompressionStartedEvent({this.custom});
@@ -17,7 +19,7 @@ class CompressionStartedEvent implements CompressionEvent {
   final dynamic custom;
 }
 
-/// Event for progress in video compression
+/// Event for progress in video/audio compression
 class CompressionProgressEvent implements CompressionEvent {
   /// Public initializer
   const CompressionProgressEvent({required this.progress, this.custom});
@@ -43,32 +45,32 @@ class CompressionProgressEvent implements CompressionEvent {
   int get hashCode => progress.hashCode;
 }
 
-/// Video compression completed event
+/// Video/Audio compression completed event
 class CompressionCompletedEvent implements CompressionEvent {
   /// Public initializer
-  const CompressionCompletedEvent({required this.url, this.custom});
+  const CompressionCompletedEvent({required this.info, this.custom});
 
-  /// An url for output video file
-  final String url;
+  /// Output media information
+  final MediaInfo info;
 
   /// Optional custom field
   @override
   final dynamic custom;
 
   @override
-  String toString() => '${super.toString()}, URL: $url';
+  String toString() => '${super.toString()}, Info: $info';
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is CompressionCompletedEvent && other.url == url;
+        other is CompressionCompletedEvent && other.info.url == info.url;
   }
 
   @override
-  int get hashCode => url.hashCode;
+  int get hashCode => info.url.hashCode;
 }
 
-/// Video compression cancelled event
+/// Video/Audio compression cancelled event
 class CompressionCancelledEvent implements CompressionEvent {
   /// Constant contructor
   const CompressionCancelledEvent({this.custom});
@@ -78,12 +80,12 @@ class CompressionCancelledEvent implements CompressionEvent {
   final dynamic custom;
 }
 
-/// Video compression failed event
+/// Video/Audio compression failed event
 class CompressionFailedEvent implements CompressionEvent {
   /// Public initializer
   const CompressionFailedEvent({required this.error, this.custom});
 
-  /// An error in video compression process
+  /// An error in video/audio compression process
   final String error;
 
   /// Optional custom field

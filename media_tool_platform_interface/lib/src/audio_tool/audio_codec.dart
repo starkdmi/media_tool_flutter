@@ -20,4 +20,13 @@ enum AudioCodec {
         return 3;
     }
   }
+
+  /// Init `AudioCodec` using codec id
+  static AudioCodec? fromId(int id) {
+    try {
+      return AudioCodec.values.firstWhere((e) => e.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
 }

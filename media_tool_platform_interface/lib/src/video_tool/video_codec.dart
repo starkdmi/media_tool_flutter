@@ -22,4 +22,13 @@ enum VideoCodec {
         return 'ap4h';
     }
   }
+
+  /// Init `VideoCodec` using codec id
+  static VideoCodec? fromId(String id) {
+    try {
+      return VideoCodec.values.firstWhere((e) => e.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
 }

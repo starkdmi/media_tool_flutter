@@ -52,4 +52,26 @@ enum ImageFormat {
       return null;
     }
   }
+
+  /// Init `ImageFormat` using file path (extension)
+  static ImageFormat? fromPath(String path) {
+    // Get file extension
+    final ext = path.split('.').last;
+    // Convert extension to image format
+    var format = ImageFormat.fromId(ext);
+
+    // Include some extension variations
+    if (format == null) {
+      switch (ext) {
+        case 'jpg':
+          format = ImageFormat.jpeg;
+          break;
+        case 'heic':
+          format = ImageFormat.heif;
+          break;
+      }
+    }
+
+    return format;
+  }
 }
