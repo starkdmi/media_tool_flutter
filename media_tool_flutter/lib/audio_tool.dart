@@ -23,4 +23,9 @@ class AudioTool {
     );
     return VideoCompressionTask(id: id, events: stream);
   }
+
+  /// Get audio info
+  static Future<AudioInfo?> info({required String path}) {
+    return _platform.audioInfo(path: path);
+  }
 }

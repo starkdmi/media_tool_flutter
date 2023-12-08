@@ -45,8 +45,13 @@ class VideoTool {
     return VideoCompressionTask(id: id, events: stream);
   }
 
+  /// Get video info
+  static Future<VideoInfo?> info({required String path}) {
+    return _platform.videoInfo(path: path);
+  }
+
   /// Generate video thumbnails
-  static Future<List<VideoThumbnail>> videoThumbnails({
+  static Future<List<VideoThumbnail>> thumbnails({
     required String path,
     required List<VideoThumbnailItem> requests,
     ImageSettings settings = const ImageSettings(),

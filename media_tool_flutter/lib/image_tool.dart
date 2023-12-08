@@ -20,4 +20,9 @@ class ImageTool {
       deleteOrigin: deleteOrigin,
     );
   }
+
+  /// Get image info
+  static Future<ImageInfo?> info({required String path}) {
+    return _platform.imageInfo(path: path);
+  }
 }
