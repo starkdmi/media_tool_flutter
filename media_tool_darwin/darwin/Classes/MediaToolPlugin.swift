@@ -45,6 +45,12 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
             imageCompression(call: call, result: result)
         case "videoThumbnails":
             videoThumbnails(call: call, result: result)
+        case "videoInfo":
+            videoInfo(call: call, result: result)
+        case "audioInfo":
+            audioInfo(call: call, result: result)
+        case "imageInfo":
+            imageInfo(call: call, result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -131,8 +137,13 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                         stream.sink(true)
                     case .progress(let progress):
                         stream.sink(progress.fractionCompleted)
-                    case .completed(let url):
-                        stream.sink(url.path)
+                    case .completed(let info):
+                        // swiftlint:disable force_try force_cast
+                        let data = try! JSONEncoder().encode(info as! VideoInfo)
+                        let json = try! JSONSerialization.jsonObject(with: data, options: [])
+                        // swiftlint:enable force_try force_cast
+
+                        stream.sink(json)
                         stream.sink(FlutterEndOfEventStream)
                         self.operations[uid] = nil
                     case .failed(let error):
@@ -215,8 +226,13 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                         stream.sink(true)
                     case .progress(let progress):
                         stream.sink(progress.fractionCompleted)
-                    case .completed(let url):
-                        stream.sink(url.path)
+                    case .completed(let info):
+                        // swiftlint:disable force_try force_cast
+                        let data = try! JSONEncoder().encode(info as! AudioInfo)
+                        let json = try! JSONSerialization.jsonObject(with: data, options: [])
+                        // swiftlint:enable force_try force_cast
+
+                        stream.sink(json)
                         stream.sink(FlutterEndOfEventStream)
                         self.operations[uid] = nil
                     case .failed(let error):
@@ -377,6 +393,75 @@ public class MediaToolPlugin: NSObject, FlutterPlugin {
                     }
                 }
             )
+        }
+    }
+
+    /// Get video info
+    private func videoInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let arguments = call.arguments as? [String: Any], let path = arguments["path"] as? String else {
+            result(FlutterError("Invalid arguments passed to the call"))
+            return
+        }
+        let sourceUrl = URL(fileURLWithPath: path)
+
+        // Asynchronous code
+        Task.detached {
+            do {
+                let info = try await VideoTool.getInfo(source: sourceUrl)
+
+                let data = try JSONEncoder().encode(info)
+                let json = try JSONSerialization.jsonObject(with: data, options: [])
+                result(json)
+            } catch let error {
+                result(FlutterError(error.localizedDescription))
+            }
+        }
+    }
+
+    /// Get audio info
+    private func audioInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let arguments = call.arguments as? [String: Any], let path = arguments["path"] as? String else {
+            result(FlutterError("Invalid arguments passed to the call"))
+            return
+        }
+        let sourceUrl = URL(fileURLWithPath: path)
+
+        // Asynchronous code
+        Task.detached {
+            do {
+                let info = try await AudioTool.getInfo(source: sourceUrl)
+
+                let data = try JSONEncoder().encode(info)
+                let json = try JSONSerialization.jsonObject(with: data, options: [])
+                result(json)
+            } catch let error {
+                result(FlutterError(error.localizedDescription))
+            }
+        }
+    }
+
+    /// Get image info
+    private func imageInfo(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        guard let arguments = call.arguments as? [String: Any], let path = arguments["path"] as? String else {
+            result(FlutterError("Invalid arguments passed to the call"))
+            return
+        }
+        let sourceUrl = URL(fileURLWithPath: path)
+
+        DispatchQueue.global().async {
+            do {
+                let info = try ImageTool.getInfo(source: sourceUrl)
+
+                let data = try JSONEncoder().encode(info)
+                let json = try JSONSerialization.jsonObject(with: data, options: [])
+                DispatchQueue.main.async {
+                    result(json)
+                }
+            } catch let error {
+                DispatchQueue.main.async {
+                    result(FlutterError(error.localizedDescription))
+                }
+            }
         }
     }
 }

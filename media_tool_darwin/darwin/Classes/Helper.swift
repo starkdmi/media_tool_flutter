@@ -20,6 +20,55 @@ public extension FlutterError {
 }
 
 /// Implement JSON serialization
+extension VideoInfo: Encodable {
+    private enum CodingKeys: String, CodingKey {
+        case path // url
+        case codec // videoCodec
+        case width, height // resolution
+        case hasAlpha
+        case isHDR
+        case hasAudio
+        case frameRate
+        case duration
+        case bitrate // videoBitrate, nullable
+    }
+
+    // Encodable conformation
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(url.path, forKey: .path)
+        try container.encode(videoCodec.rawValue, forKey: .codec)
+        try container.encode(resolution.width, forKey: .width)
+        try container.encode(resolution.height, forKey: .height)
+        try container.encode(hasAlpha, forKey: .hasAlpha)
+        try container.encode(isHDR, forKey: .isHDR)
+        try container.encode(hasAudio, forKey: .hasAudio)
+        try container.encode(frameRate, forKey: .frameRate)
+        try container.encode(duration, forKey: .duration)
+        try container.encode(videoBitrate, forKey: .bitrate)
+    }
+}
+
+/// Implement JSON serialization
+extension AudioInfo: Encodable {
+    private enum CodingKeys: String, CodingKey {
+        case path // url
+        case codec // nullable
+        case duration
+        case bitrate // nullable
+    }
+
+    // Encodable conformation
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(url.path, forKey: .path)
+        try container.encode(codec?.rawValue, forKey: .codec)
+        try container.encode(duration, forKey: .duration)
+        try container.encode(bitrate, forKey: .bitrate)
+    }
+}
+
+/// Implement JSON serialization
 extension ImageInfo: Encodable {
     private enum CodingKeys: String, CodingKey {
         case format
@@ -75,7 +124,7 @@ extension VideoThumbnailFile: Encodable {
     // Encodable conformation
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(url.absoluteString, forKey: .url)
+        try container.encode(url.path, forKey: .url)
         try container.encode(format?.rawValue, forKey: .format)
         try container.encode(size.width, forKey: .width)
         try container.encode(size.height, forKey: .height)

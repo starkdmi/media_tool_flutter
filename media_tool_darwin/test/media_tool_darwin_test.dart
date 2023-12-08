@@ -28,6 +28,12 @@ void main() {
             return null;
           case 'videoThumbnails':
             return null;
+          case 'videoInfo':
+            return null;
+          case 'audioInfo':
+            return null;
+          case 'imageInfo':
+            return null;
           default:
             return null;
         }

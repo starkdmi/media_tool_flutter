@@ -65,11 +65,16 @@ class MediaToolDarwin extends MediaToolPlatform {
         } else if (event is double) {
           // progress
           yield CompressionProgressEvent(progress: event);
-        } else if (event is String) {
-          yield CompressionCompletedEvent(url: event);
-        } /*else {
-          throw UnimplementedError("VideoCompressEvent for this data type isn't implemented");
-        }*/
+        } else if (event is Map<Object?, Object?>) {
+          // success with info object
+          final dict = _mapKeys(event);
+          final info = VideoInfo.fromJson(dict!)!;
+          yield CompressionCompletedEvent(info: info);
+        } else {
+          throw UnimplementedError(
+            "VideoCompressEvent for the data type ${event.runtimeType} isn't implemented",
+          );
+        }
       }
     } catch (error) {
       // failed
@@ -123,11 +128,16 @@ class MediaToolDarwin extends MediaToolPlatform {
         } else if (event is double) {
           // progress
           yield CompressionProgressEvent(progress: event);
-        } else if (event is String) {
-          yield CompressionCompletedEvent(url: event);
-        } /*else {
-          throw UnimplementedError("VideoCompressEvent for this data type isn't implemented");
-        }*/
+        } else if (event is Map<Object?, Object?>) {
+          // success with info object
+          final dict = _mapKeys(event);
+          final info = AudioInfo.fromJson(dict!)!;
+          yield CompressionCompletedEvent(info: info);
+        } else {
+          throw UnimplementedError(
+            "VideoCompressEvent for the data type ${event.runtimeType} isn't implemented",
+          );
+        }
       }
     } catch (error) {
       // failed
@@ -174,7 +184,9 @@ class MediaToolDarwin extends MediaToolPlatform {
     // Convert dict key from `Object?` to `String`
     final dict = data?.map((key, value) {
       return MapEntry<String, Object?>(
-          key is String ? key : key.toString(), value);
+        key is String ? key : key.toString(),
+        value,
+      );
     });
 
     return dict == null ? null : ImageInfo.fromJson(dict);
@@ -223,5 +235,48 @@ class MediaToolDarwin extends MediaToolPlatform {
             .whereType<VideoThumbnail>()
             .toList() ??
         [];
+  }
+
+  /// Convert dict key from `Object?` to `String`
+  Map<String, Object?>? _mapKeys(Map<Object?, Object?>? data) {
+    return data?.map((key, value) {
+      return MapEntry<String, Object?>(
+        key is String ? key : key.toString(),
+        value,
+      );
+    });
+  }
+
+  /// Extract video info
+  /// [path] - Path location of input file
+  @override
+  Future<VideoInfo?> videoInfo({required String path}) async {
+    final data = await methodChannel
+        .invokeMethod<Map<Object?, Object?>>('videoInfo', {'path': path});
+
+    final dict = _mapKeys(data);
+    return dict == null ? null : VideoInfo.fromJson(dict);
+  }
+
+  /// Extract audio info
+  /// [path] - Path location of input file
+  @override
+  Future<AudioInfo?> audioInfo({required String path}) async {
+    final data = await methodChannel
+        .invokeMethod<Map<Object?, Object?>>('audioInfo', {'path': path});
+
+    final dict = _mapKeys(data);
+    return dict == null ? null : AudioInfo.fromJson(dict);
+  }
+
+  /// Extract image info
+  /// [path] - Path location of input file
+  @override
+  Future<ImageInfo?> imageInfo({required String path}) async {
+    final data = await methodChannel
+        .invokeMethod<Map<Object?, Object?>>('imageInfo', {'path': path});
+
+    final dict = _mapKeys(data);
+    return dict == null ? null : ImageInfo.fromJson(dict);
   }
 }
