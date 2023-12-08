@@ -9,3 +9,8 @@
 ## 0.1.2
 
 - Complete plugin renaming
+
+## 0.1.3
+
+- Video and Audio compression returns Info object instead of URL
+- Separate functions to get video, audio and image info without conversion
