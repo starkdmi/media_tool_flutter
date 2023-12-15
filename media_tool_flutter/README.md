@@ -159,6 +159,27 @@ task.cancel();
 
 Each plugin methods which run platform code do support multiple parallel executions, each of execution has it's own progress, cancellation and error handling. Main tests stored at [integration_test](media_tool_flutter/example/integration_test/).
 
+## Benchmarks 
+
+### Video
+| Plugin Name | Time |
+| :-: | :-: |
+| [media_tool_darwin](https://pub.dev/packages/media_tool_darwin) | __1x__ |
+| [video_compress](https://pub.dev/packages/video_compress) | __1x__ |
+| [light_compressor](https://pub.dev/packages/light_compressor) | __1.5-2x__ |
+| [media_tool_ffmpeg](https://pub.dev/packages/media_tool_ffmpeg) | __8-12x__ |
+
+Video tests were executed on macOS (Apple Silicon) using H.264/AAC/MP4 with 1280x720 and 1920x1080 resolutions.
+
+### Image 
+| Plugin Name | Time |
+| :-: | :-: |
+| [media_tool_darwin](https://pub.dev/packages/media_tool_darwin) | __1x__ | /* up to 3x speed up on sequential calls (1/3x) */
+| [media_tool_ffmpeg](https://pub.dev/packages/media_tool_ffmpeg) | __3-5x__ | /* no speed up on sequential calls */
+| [image](https://pub.dev/packages/image) | __10x__ |
+
+Image tests were executed on macOS (Apple Silicon) using PNG and JPEG.
+
 ## License
 
 The Plugin is licensed under the MIT. The platform implementations may have their own licenses:
