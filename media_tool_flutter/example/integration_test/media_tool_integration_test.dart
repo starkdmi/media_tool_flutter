@@ -1,10 +1,14 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
+// import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as img;
 import 'package:integration_test/integration_test.dart';
+import 'package:light_compressor/light_compressor.dart';
+import 'package:media_tool_ffmpeg/media_tool_ffmpeg.dart' as ffmpeg;
 import 'package:media_tool_flutter/media_tool_flutter.dart';
 import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
-// import 'package:path_provider/path_provider.dart';
+import 'package:video_compress/video_compress.dart' as video_compress;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -95,6 +99,90 @@ void main() {
         print(destination);
         expect(thumbnails, isNotEmpty);
       });
+
+      test('benchmarks', () async {
+
+        // H.264, MP4, 720 x 1280 (macOS)
+        // media_tool_darwin 1.085888, 0.881570, 0.890366
+        // media_tool_ffmpeg 8.180939, 8.402862
+        // light_compressor 1.261467, 1.226514 (file not checked)
+        // video_compress 0.924311 (bitrate is ~8K)
+
+        // H.264, MP4, 1080x1920 (macOS)
+        // media_tool_darwin 1.608758, 1.631405
+        // media_tool_ffmpeg 18.995048, 18.762380 (bitrate is ~4K)
+        // light_compressor 2.874317, 2.886106 (file not checked)
+        // video_compress 1.440795, 1.548949, 1.502010 (bitrate is ~10K)
+
+        final file = File('${directory}media/oludeniz.MOV');
+        final path = await copyToTmp(file, 'oludeniz.MOV');
+
+        const videoSettings = VideoSettings(
+          codec: VideoCodec.h264,
+          bitrate: 2000000,
+          // quality: 0.7,
+          size: Size(1920, 1920), // Size(1280, 1280)
+        );
+        const audioSettings = AudioSettings(codec: AudioCodec.aac);
+
+        var stopwatch = Stopwatch()..start();
+        final task = VideoTool.compress(
+          id: '10001',
+          path: path,
+          destination: '${directory}temp/oludeniz_compressed_media_tool_darwin.mp4',
+          videoSettings: videoSettings,
+          audioSettings: audioSettings,
+          overwrite: true,
+        );
+        /*await for (final event in task.events) {
+          print(event);
+        }*/
+        await task.events.last;
+        print('media_tool_darwin executed in ${stopwatch. elapsed}');
+
+        stopwatch = Stopwatch()..start();
+        final stream = ffmpeg.MediaToolFFmpeg().startVideoCompression(
+          id: '10001',
+          path: path,
+          destination: '${directory}temp/oludeniz_compressed_media_tool_ffmpeg.mp4',
+          videoSettings: videoSettings,
+          audioSettings: audioSettings,
+          overwrite: true,
+        );
+        /*await for (final event in stream) {
+          print(event);
+        }*/
+        await stream.last;
+        print('media_tool_ffmpeg executed in ${stopwatch. elapsed}');
+
+        stopwatch = Stopwatch()..start();
+        final lightCompressor = LightCompressor();
+        final response = await lightCompressor.compressVideo(
+          path: path,
+          videoQuality: VideoQuality.medium, // ignored when bitrate is set
+          isMinBitrateCheckEnabled: false,
+          video: Video(
+            videoName: 'oludeniz_compressed_light_compressor.mp4',
+            // keepOriginalResolution: false,
+            videoBitrateInMbps: 2, // videoSettings.bitrate! ~/ 1000000,
+            videoHeight: 1920,
+            videoWidth: 1080,
+          ),
+          android: AndroidConfig(),
+          ios: IOSConfig(saveInGallery: true),
+        );
+        print(response);
+        print('light_compressor executed in ${stopwatch. elapsed}');
+
+        stopwatch = Stopwatch()..start();
+        final mediaInfo = await video_compress.VideoCompress.compressVideo(
+          path,
+          quality: video_compress.VideoQuality.Res1920x1080Quality, // Res1280x720Quality, Res1920x1080Quality
+          includeAudio: true,
+        );
+        print(mediaInfo?.path);
+        print('video_compress executed in ${stopwatch. elapsed}');
+      });
     });
 
     group('AudioTool', () {
@@ -127,6 +215,73 @@ void main() {
     });
 
     group('ImageTool', () {
+      test('benchmarks', () async {
+
+        // PNG 512x683 (macOS)
+        // imaged 00.7078 - 2x slower than ffmpeg
+        // darwin 00.0805 - 5x faster than ffmpeg
+        // ffmpeg 00.3754
+        // PNG 768x1024 (macOS)
+        // imaged 00.8956
+        // darwin 00.0911
+        // ffmpeg 00.3179
+        // JPEG 768x1024 (macOS)
+        // imaged 00.7065, 894KB
+        // darwin 00.0927, 325KB, 00.0302 on second and third call
+        // ffmpeg 00.3359, 86KB, 00.3126 on second and third call
+
+        const filename = 'cat.jpg';
+        const destination = 'cat.png';
+        final file = File('$directory/media/$filename');
+        final path = await copyToTmp(file, filename);  
+
+        const settings = ImageSettings(
+          format: ImageFormat.png,
+          // quality: 0.95,
+          size: Size(1024, 1024),
+          // preserveAlphaChannel: false,
+        );
+        final size = settings.size;
+
+        // await Future.delayed(const Duration(seconds: 1));
+
+        int? width;
+        int? height;
+        if (size != null) {
+          if (size.width >= size.height) {
+            height = size.height.toInt();
+          } else {
+            width = size.width.toInt();
+          }
+        }
+        var stopwatch = Stopwatch()..start();
+        final cmd = img.Command()
+          ..decodeImageFile(path)
+          ..copyResize(width: width, height: height, interpolation: img.Interpolation.nearest) // cubic
+          ..writeToFile('${directory}temp/image_dart_package_$destination');
+        await cmd.executeThread();
+        // await compute((_) => cmd.executeThread(), null);
+        print('image_dart_package executed in ${stopwatch. elapsed}');
+
+        stopwatch = Stopwatch()..start();
+        await ImageTool.compress(
+          path: path,
+          destination: '${directory}temp/media_tool_darwin_$destination',
+          settings: settings,
+          overwrite: true,
+        );
+        print('media_tool_darwin executed in ${stopwatch. elapsed}');
+
+        stopwatch = Stopwatch()..start();
+        await ffmpeg.MediaToolFFmpeg().imageCompression(
+          path: path,
+          destination: '${directory}temp/media_tool_ffmpeg_$destination',
+          settings: settings,
+          overwrite: true,
+        );
+        print('media_tool_ffmpeg executed in ${stopwatch. elapsed}');
+      });
+
       test('compress single', () async {
         // Copy cat.jpg to temp directory for tests
         final file = File('$directory/media/cat.jpg');
