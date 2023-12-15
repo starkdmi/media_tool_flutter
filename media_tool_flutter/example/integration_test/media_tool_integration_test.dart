@@ -105,13 +105,13 @@ void main() {
         // H.264, MP4, 720 x 1280 (macOS)
         // media_tool_darwin 1.085888, 0.881570, 0.890366
         // media_tool_ffmpeg 8.180939, 8.402862
-        // light_compressor 1.261467, 1.226514 (file not checked)
+        // light_compressor 1.261467, 1.226514
         // video_compress 0.924311 (bitrate is ~8K)
 
         // H.264, MP4, 1080x1920 (macOS)
         // media_tool_darwin 1.608758, 1.631405
         // media_tool_ffmpeg 18.995048, 18.762380 (bitrate is ~4K)
-        // light_compressor 2.874317, 2.886106 (file not checked)
+        // light_compressor 2.874317, 2.886106, 3.303173
         // video_compress 1.440795, 1.548949, 1.502010 (bitrate is ~10K)
 
         final file = File('${directory}media/oludeniz.MOV');
@@ -162,14 +162,14 @@ void main() {
           videoQuality: VideoQuality.medium, // ignored when bitrate is set
           isMinBitrateCheckEnabled: false,
           video: Video(
-            videoName: 'oludeniz_compressed_light_compressor.mp4',
+            videoName: 'oludeniz_compressed_light_compressor.mp4', // some temp directory
             // keepOriginalResolution: false,
             videoBitrateInMbps: 2, // videoSettings.bitrate! ~/ 1000000,
-            videoHeight: 1920,
-            videoWidth: 1080,
+            videoHeight: 1080, // width and height are mixed up for portrait video
+            videoWidth: 1920,
           ),
           android: AndroidConfig(),
-          ios: IOSConfig(saveInGallery: true),
+          ios: IOSConfig(saveInGallery: false),
         );
         print(response);
         print('light_compressor executed in ${stopwatch. elapsed}');
