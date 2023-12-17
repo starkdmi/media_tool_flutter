@@ -4,7 +4,7 @@
 
 ## 🚧 WIP 🚧
 
-Only Apple (iOS & macOS) support is implemented via native code yet. The Android implementation is mocked using `FFmpeg`.
+Only Apple (iOS & macOS) support is implemented via native code yet.
 
 ## About
 
@@ -16,10 +16,9 @@ Flutter plugin for advanced media manipulation using native platform code. Suppo
 | --- | --- |
 | Apple | [MediaToolSwift](https://github.com/starkdmi/MediaToolSwift) |
 | Android | MediaCodec\* | 
-| Windows & Linux | OpenCL | 
-| Web| None \| [FFmpeg](https://github.com/ffmpegwasm/ffmpeg.wasm) |
+| Windows & Linux | OpenCL\* | 
 
-\* FFmpeg based [media_tool_ffmpeg](https://github.com/starkdmi/media_tool_ffmpeg) implementation is __temporarily__ used.
+\* Pull requests with implementation of `MediaToolPlatform` are welcome!
 
 ## Video
 
@@ -157,7 +156,7 @@ task.cancel();
 
 ## Internally
 
-Each plugin methods which run platform code do support multiple parallel executions, each of execution has it's own progress, cancellation and error handling. Main tests stored at [integration_test](media_tool_flutter/example/integration_test/).
+Each plugin methods which run platform code do support multiple parallel executions, each of execution has it's own progress, cancellation and error handling. Main tests stored at [integration_test](media_tool/example/integration_test/).
 
 ## Benchmarks 
 
@@ -184,4 +183,3 @@ Image tests were executed on macOS (Apple Silicon) using PNG and JPEG.
 
 The Plugin is licensed under the MIT. The platform implementations may have their own licenses:
 - MediaToolSwift - Mozilla Public License 2.0
-- media_tool_ffmpeg - LGPL V2.1

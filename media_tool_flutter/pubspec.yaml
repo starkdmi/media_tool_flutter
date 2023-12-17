@@ -2,7 +2,7 @@ name: media_tool_flutter
 description: Video, image and audio conversion and manipulation via native platform code.
 homepage: https://github.com/starkdmi/media_tool_flutter
 repository: https://github.com/starkdmi/media_tool_flutter/tree/main/media_tool_flutter
-version: 0.1.3
+version: 0.1.4
 # publish_to: none
 
 environment:
@@ -16,10 +16,6 @@ flutter:
         default_package: media_tool_darwin
       macos:
         default_package: media_tool_darwin
-      android:
-        package: media_tool_ffmpeg
-        default_package: media_tool_ffmpeg
-        pluginClass: MediaToolFFmpeg
 
 dependencies:
   flutter:
@@ -27,14 +23,11 @@ dependencies:
 
   # pub.dev
   media_tool_darwin: ">=0.1.0 <1.0.0"
-  media_tool_ffmpeg: ">=0.1.0 <1.0.0"
   media_tool_platform_interface: ">=0.1.0 <1.0.0"
 
   # local
   # media_tool_darwin: 
   #   path: ../media_tool_darwin
-  # media_tool_ffmpeg:
-  #   path: ../media_tool_ffmpeg
   # media_tool_platform_interface:
   #   path: ../media_tool_platform_interface
 
