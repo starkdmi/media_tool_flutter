@@ -17,4 +17,4 @@
 
 ## 0.1.4
 
-- Remove Android implemetation based on FFmpeg
+- Remove Android implementation based on FFmpeg
