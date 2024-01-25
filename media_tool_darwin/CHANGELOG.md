@@ -18,3 +18,7 @@
 ## 0.1.4
 
 - Fix `MediaToolSwift` version
+
+## 0.1.5
+
+- Update `MediaToolSwift` version to 1.1.1
