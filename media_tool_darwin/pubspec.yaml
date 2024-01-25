@@ -2,7 +2,7 @@ name: media_tool_darwin
 description: Darwin (iOS, macOS) implementation of the media_tool_flutter plugin.
 homepage: https://github.com/starkdmi/media_tool_flutter
 repository: https://github.com/starkdmi/media_tool_flutter/tree/main/media_tool_darwin
-version: 0.1.4
+version: 0.1.5
 # publish_to: none
 
 environment:

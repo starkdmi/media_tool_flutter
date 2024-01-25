@@ -186,7 +186,7 @@ extension CompressionVideoSettings: Decodable {
             codec: codec,
             bitrate: bitrate,
             quality: quality,
-            size: size,
+            size: size == nil ? .original : .fit(size!),
             frameRate: frameRate,
             preserveAlphaChannel: preserveAlphaChannel,
             hardwareAcceleration: hardwareAcceleration
