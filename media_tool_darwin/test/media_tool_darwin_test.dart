@@ -15,7 +15,8 @@ void main() {
 
       log = <MethodCall>[];
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(mediaTool.methodChannel, (methodCall) async {
+          .setMockMethodCallHandler(mediaTool.methodChannel,
+              (methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
           case 'startVideoCompression':
