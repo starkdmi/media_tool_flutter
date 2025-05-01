@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as img;
 import 'package:integration_test/integration_test.dart';
 import 'package:light_compressor/light_compressor.dart';
-import 'package:media_tool_ffmpeg/media_tool_ffmpeg.dart' as ffmpeg;
+// import 'package:media_tool_ffmpeg/media_tool_ffmpeg.dart' as ffmpeg;
 import 'package:media_tool_flutter/media_tool_flutter.dart';
 import 'package:media_tool_platform_interface/media_tool_platform_interface.dart';
 import 'package:video_compress/video_compress.dart' as video_compress;
@@ -14,7 +14,8 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('MediaTool', () {
-    final directory = (goldenFileComparator as LocalFileComparator).basedir.path;
+    final directory =
+        (goldenFileComparator as LocalFileComparator).basedir.path;
     print(MediaToolPlatform.instance.runtimeType);
 
     group('VideoTool', () {
@@ -45,9 +46,12 @@ void main() {
         /*await for (final event in task.events) {
           print(event);
         }*/
-        expect(task.events, emitsThrough(
-          CompressionCompletedEvent(info: MockInfo(url: destination)),
-        ),);
+        expect(
+          task.events,
+          emitsThrough(
+            CompressionCompletedEvent(info: MockInfo(url: destination)),
+          ),
+        );
         print(destination);
       });
 
@@ -72,9 +76,12 @@ void main() {
           VideoCompressCancelledEvent(),
         ]),);*/
 
-        expect(task.events, emitsThrough(
-          const CompressionCancelledEvent(),
-        ),);
+        expect(
+          task.events,
+          emitsThrough(
+            const CompressionCancelledEvent(),
+          ),
+        );
       });
 
       test('generate video thumbnails', () async {
@@ -101,7 +108,6 @@ void main() {
       });
 
       test('benchmarks', () async {
-
         // H.264, MP4, 720 x 1280 (macOS)
         // media_tool_darwin 1.085888, 0.881570, 0.890366
         // media_tool_ffmpeg 8.180939, 8.402862
@@ -129,7 +135,8 @@ void main() {
         final task = VideoTool.compress(
           id: '10001',
           path: path,
-          destination: '${directory}temp/oludeniz_compressed_media_tool_darwin.mp4',
+          destination:
+              '${directory}temp/oludeniz_compressed_media_tool_darwin.mp4',
           videoSettings: videoSettings,
           audioSettings: audioSettings,
           overwrite: true,
@@ -138,13 +145,14 @@ void main() {
           print(event);
         }*/
         await task.events.last;
-        print('media_tool_darwin executed in ${stopwatch. elapsed}');
+        print('media_tool_darwin executed in ${stopwatch.elapsed}');
 
-        stopwatch = Stopwatch()..start();
+        /*stopwatch = Stopwatch()..start();
         final stream = ffmpeg.MediaToolFFmpeg().startVideoCompression(
           id: '10001',
           path: path,
-          destination: '${directory}temp/oludeniz_compressed_media_tool_ffmpeg.mp4',
+          destination:
+              '${directory}temp/oludeniz_compressed_media_tool_ffmpeg.mp4',
           videoSettings: videoSettings,
           audioSettings: audioSettings,
           overwrite: true,
@@ -153,7 +161,7 @@ void main() {
           print(event);
         }*/
         await stream.last;
-        print('media_tool_ffmpeg executed in ${stopwatch. elapsed}');
+        print('media_tool_ffmpeg executed in ${stopwatch.elapsed}');*/
 
         stopwatch = Stopwatch()..start();
         final lightCompressor = LightCompressor();
@@ -162,26 +170,29 @@ void main() {
           videoQuality: VideoQuality.medium, // ignored when bitrate is set
           isMinBitrateCheckEnabled: false,
           video: Video(
-            videoName: 'oludeniz_compressed_light_compressor.mp4', // some temp directory
+            videoName:
+                'oludeniz_compressed_light_compressor.mp4', // some temp directory
             // keepOriginalResolution: false,
             videoBitrateInMbps: 2, // videoSettings.bitrate! ~/ 1000000,
-            videoHeight: 1080, // width and height are mixed up for portrait video
+            videoHeight:
+                1080, // width and height are mixed up for portrait video
             videoWidth: 1920,
           ),
           android: AndroidConfig(),
           ios: IOSConfig(saveInGallery: false),
         );
         print(response);
-        print('light_compressor executed in ${stopwatch. elapsed}');
+        print('light_compressor executed in ${stopwatch.elapsed}');
 
         stopwatch = Stopwatch()..start();
         final mediaInfo = await video_compress.VideoCompress.compressVideo(
           path,
-          quality: video_compress.VideoQuality.Res1920x1080Quality, // Res1280x720Quality, Res1920x1080Quality
+          quality: video_compress.VideoQuality
+              .Res1920x1080Quality, // Res1280x720Quality, Res1920x1080Quality
           includeAudio: true,
         );
         print(mediaInfo?.path);
-        print('video_compress executed in ${stopwatch. elapsed}');
+        print('video_compress executed in ${stopwatch.elapsed}');
       });
     });
 
@@ -207,16 +218,18 @@ void main() {
         /*await for (final event in task.events) {
           print(event);
         }*/
-        expect(task.events, emitsThrough(
-          CompressionCompletedEvent(info: MockInfo(url: destination)),
-        ),);
+        expect(
+          task.events,
+          emitsThrough(
+            CompressionCompletedEvent(info: MockInfo(url: destination)),
+          ),
+        );
         print(destination);
       });
     });
 
     group('ImageTool', () {
       test('benchmarks', () async {
-
         // PNG 512x683 (macOS)
         // imaged 00.7078 - 2x slower than ffmpeg
         // darwin 00.0805 - 5x faster than ffmpeg
@@ -233,7 +246,7 @@ void main() {
         const filename = 'cat.jpg';
         const destination = 'cat.png';
         final file = File('$directory/media/$filename');
-        final path = await copyToTmp(file, filename);  
+        final path = await copyToTmp(file, filename);
 
         const settings = ImageSettings(
           format: ImageFormat.png,
@@ -257,11 +270,14 @@ void main() {
         var stopwatch = Stopwatch()..start();
         final cmd = img.Command()
           ..decodeImageFile(path)
-          ..copyResize(width: width, height: height, interpolation: img.Interpolation.nearest) // cubic
+          ..copyResize(
+              width: width,
+              height: height,
+              interpolation: img.Interpolation.nearest) // cubic
           ..writeToFile('${directory}temp/image_dart_package_$destination');
         await cmd.executeThread();
         // await compute((_) => cmd.executeThread(), null);
-        print('image_dart_package executed in ${stopwatch. elapsed}');
+        print('image_dart_package executed in ${stopwatch.elapsed}');
 
         stopwatch = Stopwatch()..start();
         await ImageTool.compress(
@@ -270,16 +286,16 @@ void main() {
           settings: settings,
           overwrite: true,
         );
-        print('media_tool_darwin executed in ${stopwatch. elapsed}');
+        print('media_tool_darwin executed in ${stopwatch.elapsed}');
 
-        stopwatch = Stopwatch()..start();
+        /*stopwatch = Stopwatch()..start();
         await ffmpeg.MediaToolFFmpeg().imageCompression(
           path: path,
           destination: '${directory}temp/media_tool_ffmpeg_$destination',
           settings: settings,
           overwrite: true,
         );
-        print('media_tool_ffmpeg executed in ${stopwatch. elapsed}');
+        print('media_tool_ffmpeg executed in ${stopwatch.elapsed}');*/
       });
 
       test('compress single', () async {
@@ -319,7 +335,7 @@ void main() {
 /// Mocked info
 class MockInfo implements MediaInfo {
   /// Public initializer
-  const MockInfo({ required this.url });
+  const MockInfo({required this.url});
 
   /// File path
   @override
